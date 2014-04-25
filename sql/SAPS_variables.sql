@@ -1,7 +1,8 @@
---create materialized view raw_saps_variables as
+create materialized view tbrennan.saps_variables_mimic2v30 as
 
-with all_icustay_days as
-  (select icud.subject_id,
+with all_icustay_days as (
+
+  select icud.subject_id,
           icud.hadm_id,
           icud.icustay_id,
           idays.seq,
@@ -9,24 +10,22 @@ with all_icustay_days as
           idays.endtime
    from tbrennan.mimic3_adults icud
    join mimic2v30.icustay_days idays 
-      on icud.
-   where icud.icustay_los > 3
-     and idays.seq <= 3
---     and icud.subject_id < 100
-  )
+      on icud.icustay_id = idays.icustay_id
+)
 --select * from all_icustay_days;
 
+/*
 , pivot_begintime as
   (select *
    from (select subject_id, hadm_id, icustay_id, seq, begintime from all_icustay_days) 
-     pivot (min(begintime) for seq in ('1' as begintime_day1))
+     pivot (min(begintime) for seq in ('1' as begintime))
   )
 --select * from pivot_begintime;
   
 , pivot_endtime as
   (select *
    from (select subject_id, hadm_id, icustay_id, seq, endtime from all_icustay_days) 
-     pivot (min(endtime) for seq in ('1' as endtime_day1))
+     pivot (min(endtime) for seq in ('1' as endtime))
   )
 --select * from pivot_endtime;
 
@@ -34,32 +33,48 @@ with all_icustay_days as
   (select b.subject_id,
           b.hadm_id,
           b.icustay_id,
-          b.begintime_day1,
-          e.endtime_day1
+          b.begintime,
+          e.endtime
    from pivot_begintime b
    join pivot_endtime e on b.icustay_id=e.icustay_id
   )
 --select * from icustay_days_in_columns;
+*/
+
+, AgeParams as (
+   select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          'AGE' as category,
+          d.age_admit valuenum
+    from all_icustay_days s
+    join tbrennan.mimic3_adults d
+      on s.icustay_id = d.icustay_id
+)
+--select * from AgeParams;
 
 , ChartedParams as
   -- Group each c.itemid in meaningful category names
   -- also perform some metric conversion (temperature, etc...)
   (select s.subject_id, 
           s.hadm_id,
-          s.icustay_id,         
+          s.icustay_id,
+          s.seq,
           case
-            when c.itemid in (211) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'HR_day1'
-            when c.itemid in (676, 677, 678, 679) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'TEMPERATURE_day1'
-            when c.itemid in (51, 455) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'SYSABP_day1'  -- Invasive/noninvasive BP
-            when c.itemid in (781) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'BUN_day1'
+            when c.itemid in (220045, 211) and c.time between s.begintime and s.endtime then 'HR'
+            when c.itemid in (676, 677, 678, 679, 227054, 223762, 223761) and c.time between s.begintime and s.endtime then 'TEMPERATURE'
+            when c.itemid in (51, 455, 225309, 2293) and c.time between s.begintime and s.endtime then 'SYSABP'  -- Invasive/noninvasive BP
+            when c.itemid in (781,225624,1162,3737,227000,5876,227001) and c.time between s.begintime and s.endtime then 'BUN'
           end as category,
           case
-            when c.itemid in (678, 679) then (5/9)*(c.value1num-32)
+            when c.itemid in (678, 679, 227054, 223761) then (5/9)*(c.value1num-32)
             else c.value1num
           end as valuenum
-   from icustay_days_in_columns s
-   join mimic2v26.chartevents c on s.icustay_id=c.icustay_id
-   where c.charttime between s.begintime_day1 and s.endtime_day1
+   from all_icustay_days s
+   join mimic2v30.chartevents c 
+     on s.icustay_id = c.icustay_id
+   where c.time between s.begintime and s.endtime
      and ((c.itemid in (211) and c.value1num between 10 and 250)
           or (c.itemid in (676, 677) and c.value1num between 15 and 45)
           or (c.itemid in (678, 679) and (5/9)*(c.value1num-32) between 15 and 45)
@@ -68,37 +83,55 @@ with all_icustay_days as
          )
      and c.value1num is not null
   )
-select * from ChartedParams;
+--select * from ChartedParams;
 
 , LabParams as
   -- Group each c.itemid in meaningful category names
   -- also perform some metric conversion (temperature, etc...)
   (select s.subject_id, 
           s.hadm_id,
-          s.icustay_id,         
+          s.icustay_id,
+          s.seq,
           case
-            when c.itemid in (50383) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'HCT_day1'
-            when c.itemid in (50316, 50468) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'WBC_day1'
-            when c.itemid in (50006, 50112) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'GLUCOSE_day1'  
-            when c.itemid in (50022, 50025, 50172) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'HCO3_day1'
-            when c.itemid in (50009, 50149) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'POTASSIUM_day1'
-            when c.itemid in (50012, 50159) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'SODIUM_day1'
-            when c.itemid in (50177) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'BUN_day1'
-            when c.itemid in (50090) and c.charttime between s.begintime_day1 and s.endtime_day1 then 'CREATININE_day1'
+            when c.itemid in (50383,50029)
+              and c.charttime between s.begintime and s.endtime then 'HCT'
+            when c.itemid in (51326,50468,50316) 
+              and c.charttime between s.begintime and s.endtime then 'WBC'
+            when c.itemid in (50112,50936,50006) 
+              and c.charttime between s.begintime and s.endtime then 'GLUCOSE'  
+            when c.itemid in (50803,50022,50172,50025) 
+              and c.charttime between s.begintime and s.endtime then 'HCO3'
+            when c.itemid in (50009,50821,50976,50149)  
+              and c.charttime between s.begintime and s.endtime then 'POTASSIUM'
+            when c.itemid in (50989,50823,50159,50012) 
+              and c.charttime between s.begintime and s.endtime then 'SODIUM'
+            when c.itemid in (51011,50177) 
+              and c.charttime between s.begintime and s.endtime then 'BUN'
+            when c.itemid in (50090,50916) 
+              and c.charttime between s.begintime and s.endtime then 'CREATININE'
           end as category,
           valuenum
-   from icustay_days_in_columns s
-   join mimic2v26.labevents c on s.icustay_id=c.icustay_id
-   where c.charttime between s.begintime_day1 and s.endtime_day1
-     and ((c.itemid in (50383) and c.valuenum between 5 and 80)
-          or (c.itemid in (50316, 50468) and c.valuenum*1000 between 100 and 200000)
-          or (c.itemid in (50006, 50112) and c.valuenum between 0.5 and 1000)
-          or (c.itemid in (50022, 50025, 50172) and c.valuenum between 2 and 100)
-          or (c.itemid in (50009, 50149) and c.valuenum between 0.5 and 20)
-          or (c.itemid in (50012, 50159) and c.valuenum between 50 and 300)
-          or (c.itemid in (50177) and c.valuenum between 1 and 100)
-          or (c.itemid in (50090) and c.valuenum between 0 and 30)
-         )
+   from all_icustay_days s
+   join mimic2v30.labevents c 
+     on s.icustay_id = c.icustay_id
+   where c.charttime between s.begintime and s.endtime
+   and ((c.itemid in (50383,50029) -- 'HCT'
+          and c.valuenum between 5 and 100) -- 0 <> 390
+        or (c.itemid in (51326,50468,50316) -- 'WBC'
+          and c.valuenum*1000 between 5 and 2000000) -- 0 <> 1,250,000
+        or (c.itemid in (50112,50936,50006)-- 'GLUCOSE'  
+          and c.valuenum between 0.5 and 1000) -- -251 <> 3555
+        or (c.itemid in (50803,50022,50172,50025)--'HCO3'
+          and c.valuenum between 2 and 100) -- 0 <> 231
+        or (c.itemid in (50009,50821,50976,50149)-- 'POTASSIUM'
+          and c.valuenum between 0.5 and 70) -- 0.7	<> 52
+        or (c.itemid in (50989,50823,50159,50012)-- 'SODIUM'
+          and c.valuenum between 50 and 300) -- 1.07 <>	1332
+        or (c.itemid in (51011,50177) -- 'BUN'
+          and c.valuenum between 1 and 100) -- 0 <> 280
+        or (c.itemid in (50090,50916) -- 'CREATININE'
+          and c.valuenum between 0 and 30) -- 0	<> 73
+     )
      and c.valuenum is not null
   )
 --select * from LabParams;
@@ -109,64 +142,79 @@ select * from ChartedParams;
   (select s.subject_id, 
           s.hadm_id,
           s.icustay_id,         
+          s.seq,
           case
-            when c.charttime between s.begintime_day1 and s.endtime_day1 then 'URINE_day1'
+            when c.charttime between s.begintime and s.endtime then 'URINE'
            end as category,
-          c.volume
-   from icustay_days_in_columns s
-   join mimic2v26.ioevents c on s.icustay_id=c.icustay_id
-   where c.charttime between s.begintime_day1 and s.endtime_day1
-     and c.itemid in ( 651, 715, 55, 56, 57, 61, 65, 69, 85, 94, 96, 288, 405, 428, 473, 2042, 2068, 2111, 2119, 2130, 1922, 2810, 2859, 3053, 3462, 3519, 3175, 2366, 2463, 2507, 2510, 2592, 2676, 3966, 3987, 4132, 4253, 5927 )         
-     and c.volume is not null   
+          c.value volume
+   from all_icustay_days s
+   join mimic2v30.ioevents c 
+    on s.icustay_id=c.icustay_id
+   where c.charttime between s.begintime and s.endtime
+     and c.itemid in ( 40056,40057,40058,40070,40086,40095,40097,40097,40406,40429,40474,40535,40652,40716,41923,42367,42508,42511,42677,42811,42860,43054,46181 )
+     and c.value is not null   
   )
 --select * from UrineParams;
 
+-- Needs to be updated to 2v30
 , daily_urine as
-  (select subject_id, 
+  (select distinct subject_id, 
           hadm_id,
           icustay_id, 
+          seq,
           category,
-          sum(volume) as valuenum
+          sum(volume) over (partition by subject_id, hadm_id, icustay_id) valuenum 
    from UrineParams
-   group by subject_id, hadm_id, icustay_id, category
   )
 --select * from daily_urine;
 
 , VentilatedRespParams as (
-  select s.subject_id,
+  select distinct s.subject_id,
          s.hadm_id,
          s.icustay_id,
+         s.seq,
          case
-           when c.charttime between s.begintime_day1 and s.endtime_day1 then 'VENTILATED_RESP_day1'
+           when c.time between s.begintime and s.endtime then 'VENTILATED_RESP'
+           --when p.starttime between s.begintime and s.endtime then 'VENTILATED_RESP'
          end as category,          
          -1 as valuenum   -- force invalid number
-    from icustay_days_in_columns s
-    join mimic2v26.chartevents c on s.icustay_id=c.icustay_id
-   where c.charttime between s.begintime_day1 and s.endtime_day1
-     and c.itemid in (543, 544, 545, 619, 39, 535, 683, 720, 721, 722, 732)
+    from all_icustay_days s
+    join mimic2v30.chartevents c on s.icustay_id=c.icustay_id
+    --join mimic2v30.procedureevents p on s.hadm_id=p.hadm_id
+    where (c.time between s.begintime and s.endtime
+     --and c.itemid in (543, 544, 545, 619, 39, 535, 683, 720, 721, 722, 732)
+     and c.itemid in (38,39,40,141,444,535,543,544,545,619,639,654,681,682,
+     683,684,720,721,722,732,1209,1651,1660,1672,1864,1865,2049,2065,2069,
+     2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,5593,20002,224684,
+     224685,224686,224688,224689,224695,224696,224697,227565,227566))
+    -- or (p.starttime between s.begintime and s.endtime and lower(p.label) like 'Intubation')
 )
 --select * from VentilatedRespParams;
 
 , SpontaneousRespParams as (
   -- Group each c.itemid in meaninful category names
   -- also performin some metric conversion (temperature, etc...)
-  select s.subject_id, 
+  select distinct s.subject_id, 
          s.hadm_id,
          s.icustay_id,    
+         s.seq,
          case
-           when c.charttime between s.begintime_day1 and s.endtime_day1 then 'SPONTANEOUS_RESP_day1'
+           when c.time between s.begintime and s.endtime then 'SPONTANEOUS_RESP'
          end as category,         
          c.value1num as valuenum
-    from icustay_days_in_columns s
-    join mimic2v26.chartevents c on s.icustay_id=c.icustay_id
-   where c.charttime between s.begintime_day1 and s.endtime_day1
-     and (c.itemid in (219, 615, 618) and c.value1num between 2 and 80)     
+    from all_icustay_days s
+    join mimic2v30.chartevents c 
+      on s.icustay_id=c.icustay_id
+   where c.time between s.begintime and s.endtime
+     and (c.itemid in (220210,618,653,3603,219,1635,8113,1884,615) and c.value1num between 2 and 80)     
      and c.value1num is not null
 )
 --select * from SpontaneousRespParams;
 
 , all_params as
-  (select * from ChartedParams
+  (select * from AgeParams
+   union
+   select * from ChartedParams
    union
    select * from LabParams
    union
@@ -176,28 +224,5 @@ select * from ChartedParams;
    union
    select * from SpontaneousRespParams
   )
---select * from all_params;
-
-, pivot_final_data as
-  (select *
-   from (select * from all_params) 
-     pivot (avg(valuenum) for category in   -- taking average values per day
-      ('HR_day1' as HR_day1, 
-       'TEMPERATURE_day1' as TEMPERATURE_day1,
-       'SYSABP_day1' as SYSABP_day1,
-       'BUN_day1' as BUN_day1,
-       'HCT_day1' as HCT_day1,
-       'WBC_day1' as WBC_day1,
-       'GLUCOSE_day1' as GLUCOSE_day1,
-       'HCO3_day1' as HCO3_day1,
-       'POTASSIUM_day1' as POTASSIUM_day1,
-       'SODIUM_day1' as SODIUM_day1,
-       'CREATININE_day1' as CREATININE_day1,
-       'URINE_day1' as URINE_day1,
-       'VENTILATED_RESP_day1' as VENTILATED_RESP_day1,
-       'SPONTANEOUS_RESP_day1' as SPONTANEOUS_RESP_day1,
-      ))  
-  )
-select * from pivot_final_data;
-
+select * from all_params;
 
