@@ -71,7 +71,7 @@ BEGIN
             retValue := 4;
         END IF;
 
-    ELSIF p_category = 'SYS ABP' THEN
+    ELSIF p_category = 'SYSABP' THEN
 
         IF p_val < 55 THEN
             retValue := 4;

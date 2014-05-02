@@ -1,6 +1,6 @@
 drop materialized view tbrennan.sapsi_mimic2v30;
 
-create materialized view tbrennan.sapsi_mimic2v30 as 
+--create materialized view tbrennan.sapsi_mimic2v30 as 
 
 with SummaryValues as (
   -- find the min and max values for each category and calc_dt
@@ -14,7 +14,7 @@ with SummaryValues as (
    from tbrennan.saps_variables_mimic2v30
 )
 --select * from SummaryValues;
-
+--select count(distinct icustay_id) from SummaryValues; --50,172 icustay_id
 
 , CalcSapsParams as (
   -- find the SAPS parameter for summary values each category on each day
@@ -51,6 +51,31 @@ with SummaryValues as (
 ) 
 --select * from SAPSparameter;--1,925,124 rows inserted
 
+, pivotparams as (
+  
+  select *
+   from (select * from SAPSparameter) 
+     pivot (median(param_score) for category in (
+        'AGE' as age,
+        'HR' as hr,
+        'TEMPERATURE' as temperature,
+        'SYSABP' as sysabp,
+        'VENTILATED_RESP' as vent_resp,
+        'SPONTANEOUS_RESP' as spon_resp,
+        'BUN' as bun,
+        'HCT' as hct,
+        'WBC' as wbc,
+        'GLUCOSE' as glucose,
+        'POTASSIUM' as k,
+        'SODIUM' as na,
+        'HCO3' as hco3,
+        'GCS' as gcs,
+        'URINE' as urine
+        ))
+        
+)
+select * from pivotparams;
+
 , calc_saps_score as (
   -- calculate SAPS score for everyday in ICU
   select distinct d.subject_id, 
@@ -62,8 +87,9 @@ with SummaryValues as (
     from sapsparameter d
     where d.param_score is not null
       and d.param_score >= 0
+      order by icustay_id
 )
---select * from calc_saps_score;
+select count(distinct icustay_id) from calc_saps_score; --
 
 
 , final_saps as (
@@ -77,4 +103,4 @@ with SummaryValues as (
     where param_count = 13
     order by subject_id, icustay_id, seq
 )
-select * from final_saps;
+select count(distinct icustay_id) from final_saps;
