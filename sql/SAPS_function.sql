@@ -1,4 +1,4 @@
-create or replace FUNCTION merge25.GET_SAPS_FOR_PARAMETER (
+create or replace FUNCTION GET_SAPS_FOR_PARAMETER (
     p_category IN VARCHAR2, p_val IN NUMBER)
 return NUMBER IS
 /*                                                                                              
@@ -87,8 +87,12 @@ BEGIN
 
     ELSIF p_category = 'VENTILATED_RESP' THEN
 
-        retValue := 3;
-
+        IF p_val = 1 THEN
+            retValue := 3;
+        ELSIF p_val = 0 THEN
+            retValue := 0;
+        END IF;
+        
     ELSIF p_category = 'SPONTANEOUS_RESP' THEN
 
         IF p_val < 6 THEN
