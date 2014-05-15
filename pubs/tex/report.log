@@ -1,0 +1,277 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  15 MAY 2014 17:54
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**report.tex
+(./report.tex
+LaTeX2e <2011/06/27>
+Babel <3.9f> and hyphenation patterns for 78 languages loaded.
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip43
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 57.
+\captionmargin=\dimen105
+\captionmargin@=\dimen106
+\captionwidth=\dimen107
+\caption@tempdima=\dimen108
+\caption@indent=\dimen109
+\caption@parindent=\dimen110
+\caption@hangindent=\dimen111
+)
+\c@ContinuedFloat=\count88
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+\c@subfigure=\count89
+\c@subtable=\count90
+)
+(./report.aux)
+\openout1 = `report.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+
+(/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count91
+\scratchdimen=\dimen112
+\scratchbox=\box26
+\nofMPsegments=\count92
+\nofMParguments=\count93
+\everyMPshowfont=\toks15
+\MPscratchCnt=\count94
+\MPscratchDim=\dimen113
+\MPnumerator=\count95
+\makeMPintoPDFobject=\count96
+\everyMPtoPDFconversion=\toks16
+) (/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+))
+(/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 12.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 12.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 12.
+
+
+LaTeX Warning: No \author given.
+
+<../../figure/fig_hist_sapsi_first_err.pdf, id=1, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_first_err.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_first_err.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_first_err.pdf used on inpu
+t line 16.
+(pdftex.def)             Requested size: 211.38832pt x 211.39165pt.
+
+<../../figure/fig_hist_sapsi_first_mimic2v26.pdf, id=2, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_first_mimic2v26.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_first_mimic2v26.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_first_mimic2v26.pdf used o
+n input line 22.
+(pdftex.def)             Requested size: 234.8775pt x 234.88132pt.
+
+<../../figure/fig_hist_sapsi_first_mimic2v30.pdf, id=3, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_first_mimic2v30.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_first_mimic2v30.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_first_mimic2v30.pdf used o
+n input line 25.
+(pdftex.def)             Requested size: 234.8775pt x 234.88132pt.
+
+<../../figure/fig_hist_sapsi_max_err.pdf, id=4, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_max_err.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_max_err.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_max_err.pdf used on input 
+line 30.
+(pdftex.def)             Requested size: 211.38832pt x 211.39165pt.
+
+<../../figure/fig_hist_sapsi_max_mimic2v26.pdf, id=5, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_max_mimic2v26.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_max_mimic2v26.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_max_mimic2v26.pdf used on 
+input line 35.
+(pdftex.def)             Requested size: 234.8775pt x 234.88132pt.
+
+<../../figure/fig_hist_sapsi_max_mimic2v30.pdf, id=6, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_max_mimic2v30.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_max_mimic2v30.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_max_mimic2v30.pdf used on 
+input line 38.
+(pdftex.def)             Requested size: 234.8775pt x 234.88132pt.
+
+<../../figure/fig_hist_sapsi_min_err.pdf, id=7, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_min_err.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_min_err.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_min_err.pdf used on input 
+line 44.
+(pdftex.def)             Requested size: 211.38832pt x 211.39165pt.
+
+<../../figure/fig_hist_sapsi_min_mimic2v26.pdf, id=8, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_min_mimic2v26.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_min_mimic2v26.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_min_mimic2v26.pdf used on 
+input line 49.
+(pdftex.def)             Requested size: 234.8775pt x 234.88132pt.
+
+<../../figure/fig_hist_sapsi_min_mimic2v30.pdf, id=9, 505.89pt x 505.89pt>
+File: ../../figure/fig_hist_sapsi_min_mimic2v30.pdf Graphic file (type pdf)
+
+<use ../../figure/fig_hist_sapsi_min_mimic2v30.pdf>
+Package pdftex.def Info: ../../figure/fig_hist_sapsi_min_mimic2v30.pdf used on 
+input line 52.
+(pdftex.def)             Requested size: 234.8775pt x 234.88132pt.
+
+<../../figure/hist_hadm_dt.pdf, id=10, 458.71375pt x 230.8625pt>
+File: ../../figure/hist_hadm_dt.pdf Graphic file (type pdf)
+
+<use ../../figure/hist_hadm_dt.pdf>
+Package pdftex.def Info: ../../figure/hist_hadm_dt.pdf used on input line 58.
+(pdftex.def)             Requested size: 211.38832pt x 106.38824pt.
+ [1
+
+{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2 <../
+../figure/fig_hist_sapsi_first_err.pdf> <../../figure/fig_hist_sapsi_first_mimi
+c2v26.pdf> <../../figure/fig_hist_sapsi_first_mimic2v30.pdf>] [3 <../../figure/
+fig_hist_sapsi_max_err.pdf> <../../figure/fig_hist_sapsi_max_mimic2v26.pdf> <..
+/../figure/fig_hist_sapsi_max_mimic2v30.pdf>] [4 <../../figure/fig_hist_sapsi_m
+in_err.pdf> <../../figure/fig_hist_sapsi_min_mimic2v26.pdf> <../../figure/fig_h
+ist_sapsi_min_mimic2v30.pdf> <../../figure/hist_hadm_dt.pdf>] (./report.aux) ) 
+Here is how much of TeX's memory you used:
+ 2648 strings out of 493315
+ 43675 string characters out of 6137904
+ 98714 words of memory out of 5000000
+ 6090 multiletter control sequences out of 15000+600000
+ 6675 words of font info for 24 fonts, out of 8000000 for 9000
+ 957 hyphenation exceptions out of 8191
+ 38i,7n,38p,238b,363s stack positions out of 5000i,500n,10000p,200000b,80000s
+<
+/usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
+sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr
+/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
+Output written on report.pdf (4 pages, 65891 bytes).
+PDF statistics:
+ 99 PDF objects out of 1000 (max. 8388607)
+ 69 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+

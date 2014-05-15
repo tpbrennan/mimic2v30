@@ -91,7 +91,7 @@ with SummaryValues as (
     from sapsparameter d
     where d.param_score is not null
       and d.param_score >= 0
-      order by icustay_id
+      order by subject_id
 )
 --select * from calc_saps_score; --
 
@@ -115,9 +115,20 @@ with SummaryValues as (
     from final_sapsi fs
     left join mimic2v26.icustay_detail id
       on fs.subject_id = id.subject_id
-     and fs.icustay_id = id.icustay_id
+     and fs.hadm_id = id.hadm_id
 )
-select * from compare_sapsi;
+--select * from compare_sapsi;
+
+, mortality as (
+  select cs.*,
+    ad.HOSPITAL_EXPIRE_FLG
+    from compare_sapsi cs 
+    join mornin.v30_admissions ad 
+      on cs.subject_id and ad.subject_id
+     and cs.hadm_id and ad.hadm_id
+)
+select * from mortality;
+
 
 , detailed_saps as (
   -- onle select SAPS scores

@@ -9,6 +9,22 @@ path = c("/Users/tpb/Research/mimic2v30")
 paste(path,filename,sep="/")
 DATA = read.csv(paste(path,filename,sep="/"))
 
+names(DATA)
+
+#-------------------------------------------------------------------------
+# SAPSI_COMPARE - MORTALITY
+
+s = summary(DATA$SAPSI_FIRST)
+h = hist(DATA$SAPSI_FIRST,breaks=seq(0,50,by=5))
+
+popmort=100*sum(DATA$HOSPITAL_EXPIRE_FLG)/nrow(DATA)
+mort = numeric(0)
+for ( i in seq(0,45,by=5) ) {
+  SAPSIGROUP = subset(DATA,DATA$SAPSI_FIRST>=i & DATA$SAPSI_FIRST<i+5)
+  mort = c(mort, sum(SAPSIGROUP$HOSPITAL_EXPIRE_FLG)/nrow(SAPSIGROUP))
+}
+
+plot(h$mids,mort)
 
 #-------------------------------------------------------------------------
 # SAPSI_COMPARE - ERROR
