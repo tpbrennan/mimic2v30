@@ -13,6 +13,8 @@ DATA = subset(SAPSI,SEQ < 100)
 attach(DATA)
 hist(SEQ)
 
+FIRSTDAY = subset(DATA,SEQ == 1)
+hist(FIRSTDAY$PARAM_COUNT)
 plot(SEQ,PARAM_COUNT)
 
 #-------------------------------------------------------------------------
