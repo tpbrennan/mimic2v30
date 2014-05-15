@@ -1,0 +1,355 @@
+\title{Community Health Worker Project}
+\maketitle
+
+In December 2008, the Vodafone's Social Investment Fund agreed to support 
+the Community Health Worker Project in South Africa. Funding was awarded to 
+GeoMed (Pty) Ltd to develop and implement a system for 
+monitoring and evaluating the services and associated outcomes of community 
+health workers in South Africa. The technology relied heavily on the use of 
+a cellphone-based application by the community health workers. The cellphone 
+application would allow the community health worker to record the service 
+rendered to each client and the health status of the client. This report 
+is summarises the development of the project to date. 
+
+\subsection*{Community-based Health Care in South Africa}
+ 
+Community-based health care has been operating to to some degree for the 
+past 15 years. However, due to the dramatic rise in disease, such as 
+Tuberculosis and HIV/AIDS and the increased demand for medical resources, 
+the use of Community Care Givers (CCG) as an intervention within primary
+health care delivery programme has increased.  In more recent years, 
+the South African government has tried to formalise community-based 
+services. The Government's rationale is that an adequately supported CCG 
+programme is a cost-effective means to firstly provide the necessary 
+care for certain chronic conditions and, secondly, lower the patient load 
+on the first-line-of-contact health facilities within the public sector. 
+This rationale is supported by the World Health 
+Organisation~\ref{WHO_AlmaMater_1970}. The South African government has 
+relied heavily on not-for-profit organisations (NPO) to deploy and manage 
+CCGs across the country.
+
+The current National Community Care Giver Policy Framework 
+states:
+\begin{itemize}
+\item The preferred operational model is a Government/NPO partnership 
+where Government provides grants to NPOs, which employ and manage CCGs.
+\item Volunteerism is encouraged although CCG volunteers cannot work 
+more than 40 hours per month.
+\item CCGs should have a support system, e.g.~be part of an NPO or community 
+based organisation (CBO) and have access to health referral systems.
+\item Community involvement, commitment of top management, redress of 
+previous inequalities, learner contribution, stakeholder participation and 
+needs-based approaches are key principles.
+\item Fully trained generalist CCGs would receive a minimum stipend of R1500.
+\item In rural areas each CCG would cover from 80 to 100 households, the 
+corresponding number being 100 to 150 households in urban areas.
+\item The district health manager has formal responsibility for monitoring 
+the quality of services and providing support.
+\end{itemize} 
+
+In the revised National Community Care Giver Policy Framework, currently being 
+drafted, it is estimated that by 2010 CCGs in South Africa will constitute
+60\% of all health personnel with R1.8 billion of the total health budget 
+being spend on the CCG programme. However, to date the South 
+African government has been unable to secure the quality 
+of care within the CCG programme due to the inability to standardise and monitor 
+the health care service delivery to the patient. 
+
+The current monitoring 
+and evaluation (M\&E) system is paper-based and requires the CCGs to 
+fill out tally sheets at the end of every month and submit these sheets 
+to their NPO/CBO. The NPO (or CBO) managers or a designated M\&E officer 
+has to collate the information on these tally sheets and submit an 
+aggregated report of all activities to the district (or sub-district) 
+programme coordinator. This same process of aggregation and reporting 
+takes place on the district, provincial and national level. 
+
+Mobile telecommunication 
+technology provides an ideal tool to monitor the services provided by CCGs 
+and the associate patient outcomes, and thereby allow the health service 
+delivery to the patient to be standardised. In addition, the web-based 
+data management interface automates the processes of aggregation 
+and reporting. The primary goal of this project is to effectively 
+integrate these integration and communication technologies into 
+community based health services to improve basic service delivery 
+on the ground.
+
+\subsection*{System Architecture}
+
+The CCG project architecture illustrated in Figure~\ref{fig:cbs_nompilo}. 
+As previously described, CCGs are seen as the first-line-of-contact with 
+the public. The system is designed such that an application is loaded onto 
+a phone that enables the interaction between the CCG and the patients 
+to be captured, using structured question and answers (Q\&A) trees. 
+The interaction is authenticated by scanning a patient barcode using the 
+camera of the mobile phone. The patient ID, GPS location and answers to 
+Q\&A structures is uploaded onto a secure server that can be access by both 
+NPO managers and health care facility staff so that the service provided 
+by the CCGs and the patient outcomes can be monitored.  
+
+\begin{figure} \centering 
+\includegraphics[width=\textwidth]{../Figure/Nompilo/CCG_architecture.jpg}
+\caption{Schematic showing the integration of the CCG project's integration 
+into the public health system in South Africa [Source GeoMed (Pty) Ltd].}
+\label{fig:cbs_nompilo}
+\end{figure}
+
+The stake holders and associated activities involved in the CCG project 
+is illustrated in Figure~\ref{fig:nompilo_flow}. The user activities for 
+each of the stakeholders is listed in Table~\ref{tbl:activities}.
+
+\begin{tabular}{ll}
+{\bf \underline{Stakeholders}} & {\bf \underline{Activities}}\\
+Community Care Giver & Scan patient barcode\\
+~ & Register patient details\\
+~ & Enter data using Q\&A trees\\
+NPO Manager & Register patients and CCGs\\
+~ & Assign CCGs to patients (link barcode to patient record)\\
+~ & Monitor, analyse and report aggregated data\\
+Primary Health Care Facility & Register patients (link barcode to patient record)\\
+~ & Monitor, analyse and report aggregated data\\
+DoH Programme Coordinator & Add NPOs\\
+~ & Monitor, analyse and report aggregated data\\  
+\label{tbl:user_activities}
+\end{tabular}
+
+\begin{figure} \centering 
+\includegraphics[width=\textwidth]{../Figure/Nompilo/CCG_processes.jpg}
+\caption{Activities and data flow between various stakeholders in the  
+CCG project [Source GeoMed (Pty) Ltd].}
+\label{fig:nompilo_flow}
+\end{figure}
+
+The CCG project is part of a larger e-Health platform. Figure~\ref{fig:ehp} 
+illustrates the integration between the CCG project and the e-Health 
+Platform, as envisaged by GeoMed. The system is developed in a modular 
+way such that the different services can be generalised and used in 
+other applications. 
+
+\begin{figure} \centering 
+\includegraphics[width=0.6\textwidth]{../Figure/Nompilo/eHealth_platform.jpg}
+\caption{Integration of the CCG project's (Nompilo) with M\&E module and 
+the larger e-Health Platform, as envisaged by GeoMed and Vodacom Health 
+[Source GeoMed (Pty) Ltd].}
+\label{fig:ehp}
+\end{figure}
+
+\section*{Research Study}
+
+The project proposal is to validate the feasibility, the cost effectiveness 
+and scalability of employing a cellphone-based monitoring and evaluation 
+solution that will a standard and integrated framework in which community 
+based services provided by CCGs to the South African public can be recorded, 
+effectively analysed and reported to the relevant stakeholders.
+
+The solution will be deployed in three districts in three different provinces 
+in South Africa, namely Western Cape, KwaZulu Natal and Limpopo. Three 
+independent NPOs (Zanempilo Trust, The Valley Trust, CHoiCe Trust) 
+have agreed to validate the scalability of the solution 
+across managerial and geographical boundaries. 
+
+The research study associated with the project will focus on the evaluating 
+the impact of the electronic M\&E system. The study will combine both 
+quantitative and qualitative methodologies. Firstly, cost-benefit 
+analysis will be used to to assess the impact of the project costs and 
+associated projects benefits. Secondly, the impact of the electronics M\&E 
+system on the perception of the various stakeholders (including nurses, 
+doctors, NPO managers and Department of Health CBS coordinators).  
+
+\subsection*{Research Methodologies}
+
+The study will utilize a participatory action research approach and 
+will be conducted with the partner NPOs. Each NPO will select 20 
+CCGs to participate in the study, bringing the total of number of 
+participating CCGs to 60. A combination of methodologies will be 
+used to monitor and evaluate the system. In the monitoring and 
+evaluation phase both qualitative and quantitative information 
+will be gathered. Data collection tools will be based on mobile 
+phone technology but will be designed in consultation with 
+the NPOs and CCGs. The study methodologies will include:
+\begin{itemize}
+\item A review of literature, documents, and standards of current M\&E systems
+\item Focus groups with selected CCGs and community representatives  
+\item Structured interviews with clinic nurses and physicians using 
+structure survey on mobile phone
+\item Key informant interview with stakeholders, including NPO managers, 
+district programme coordinators as well as national and provincial 
+programme coordinators 
+\item Cost-benefit analysis of the M\&E system will 
+focus on the impact of the intervention on the benefits of the M\&E 
+system of CCG programme as experienced by the various stakeholders
+\end{itemize}
+
+\subsection*{Logistics}
+
+The strategic direction for the project will be provided 
+by the Research Director, Dr Irwin Friedman, at Health Systems 
+Trust\footnote{An non-governmental organisation that carries out scientific 
+research into health systems in South Africa.}.  The electronic/mobile 
+information and communication infrastructure will be developed in 
+collaboration between GeoMed (Pty) Ltd, Geo-ICT Health (Pty) Ltd and 
+Pondering Panda. The implementation of the community based 
+action research study will be undertaken by HST in conjunction with 
+the three NPOs 
+
+\section*{Literature Review}
+
+Friedman depicts succinctly the historical background of the 
+use of community based health workers (referred to as community 
+care givers in this document) from the time when World Health 
+Organization (WHO) declared Alma Ata in 1978~\cite{WHO1978_Alma_Ata} 
+and established the Primary Health Care (PHC) 
+paradigm~\cite{Friedman2002_CHWs}. He further mentions that in one form 
+or other the CBHWs have worked in different parts of South Africa, taking 
+on varied responsibilities and roles in Home and Community Based 
+Care (HCBC) activities. Non-governmental organizations (NGOs) in 
+particular were early to recognize their worth in extending PHC services.  
+
+Relying on the strengths of family and community networks, 
+Home and Community Based Care (HCBC) has emerged as an effective 
+method of providing cost-effective public health initiative, 
+particularly for people living with HIV/AIDS 
+(PLWHA). HCBC is not a replacement for hospital 
+care, but instead is part of a comprehensive continuum of prevention, 
+care, treatment, and support services that include the family, the 
+community, and various levels of health care providers. In addition to 
+providing palliative and curative care, HCBC also 
+contributes to prevention efforts by involving community members in 
+prevention, care, and support efforts.
+
+In I994, the South African Cabinet mandated the Departments of Social
+Development and Health to oversee the implementation of HCBC and
+support programme in the country. Subsequently in 2005, studies were
+conducted on a small scale and with a limited sampling size to
+evaluate a few components of the HCBC such as the audit of caregivers
+and the evaluation of costs and process indicators for HCBC including
+two appraisals of HCBC that were conducted in 2003/2004 and 2004/2005
+financial years respectively. More recently, a study has been
+completed in the evaluation of M\&E systems within HCBC with the view
+to establish an integrated M\&E system.
+
+In June, 2007 the National Department of Health (NDOH) through the
+European Union (EU) funded project – Partnerships for the Delivery of
+Primary Health Care including HIV and AIDS Programme (PDPHCP)
+undertook a literature review on NPO M\&E Systems in place in South
+Africa. The review revealed that there is no standardized M\&E
+Framework for NPOs and to make it operational across the board will
+take time. Subsequent to the review came two documents (a) Monitoring
+and Evaluation Systems for NPOs “Guidelines, Dataflow Policy, Care
+Packages and Routine Data Collections Tools and (b) Monitoring and
+Evaluation Framework for Non-Profit Organizations (NPOs) Delivering
+Primary Health Care Services. 
+
+There is a lot of variation in methodology in evaluating the 
+impact of mobile health (m-health) projects~\cite{Vital2008_mHealth_4Dev}. 
+Furthermore, there are few studies that have used economic 
+evaluation to assess impact of the proposed m-Health 
+intervention. In a recent review by Whitten et al.~concluded that 
+``there is no good evidence  to suggest that telemedicine is 
+a cost effective of delivering health 
+care''~\cite{Whitten2002_telemedicine_CEA}. A recent evaluation of 
+ten European e-Health applications suggested that 
+cost-benefit analysis is the best way to asses the multiple 
+and varied outcomes of e-Health 
+solutions~\cite{Stroetmann2007_EU_eHealth_rev}.
+A cost-benefit analysis allows the varied benefits experienced by 
+the various stakeholders to be quantified and incorporated into the 
+analysis~\cite{Drummond1977_health_economics}. 
+
+\section*{Evaluation Model}
+
+The objective of the evaluation model is to be a tool to assess 
+the impact of the CCG project by combining the quantitative and 
+qualitative resulting from the study. The quantitative portion 
+of the evaluation model is a cost-benefit model that 
+records the costs and quantifies the benefits associated with the 
+implementation of the solution. It is critical that 
+the potential benefits in improved access, quality of care, and 
+better clinical results are clearly demonstrated. 
+
+\subsection*{Cost-benefit Analysis}
+
+A cost-benefit allows the enables the impact on all stakeholders to be 
+included in the evaluation, so long as the range of benefits can be 
+expressed in monetary terms. The objective of the cost-benefit analysis 
+is to determine the total value added and the associated net benefit 
+of the proposed intervention. In this instance, the costs and benefits 
+will be assess for the current paper-based solution and this will 
+be compared with the costs and benefits associated with intervention.
+
+The first step in cost-benefit analysis is to identify the various 
+stakeholders who will be beneficiaries from the proposed intervention. 
+Furthermore, these stakeholders can be classified as primary or 
+secondary stakeholders. Secondary stakeholders are those stakeholders 
+that only experience indirect benefits as opposed to direct benefits.
+For the CCG project the primary stakeholders are, in no particular order, 
+the CCGs, NPO managers, programme coordinators at sub-district, 
+district, provincial and national level of the departments of 
+health and social development. Secondary stakeholders include 
+patients, public health service providers (eg.~nurses and doctors), 
+the department of labour and national treasury.
+
+The direct benefits associated with the CCG project are saved time, saved 
+costs and improved data accuracy. Data accuracy can be broken down into 
+the extent of data captured as well as the time it takes to capture 
+and access the data at various level of centralisation. 
+Table~\ref{tbl-benefits} lists the benefits and the beneficiaries of the 
+proposed intervention.
+
+\begin{table} \centering
+\begin{tabular}{l|c|c|c|c|c|c|}
+{\bf Benefit} & CCG & NPOs & PHC & DoH & DoSD & Treasury \\ \hline
+Saved time & $\checkmark$ & $\checkmark$ & ~ & $\checkmark$ & $\checkmark$ & ~ \\ 
+Saved costs & $\checkmark$ & $\checkmark$ & ~ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\ 
+Data accuracy & ~ & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ &  ~  \\ 
+\end{tabular}
+\caption{Benefits and the associated beneficiaries.}
+\label{tbl-benefits}
+\end{table}
+   
+The benefits need to be quantified and monetised so that they can be 
+included in the cost-benefit analysis. Table~\ref{tbl:benefits_monetisation} 
+lists the different benefits and how these benefits could be monetised.
+
+\begin{table} \centering
+\begin{tabular}{|l|l|l|} \hline
+{\bf Benefit} & {\bf Quantification} & {\bf Monetisation} \\ \hline
+Saved time & $\cdot$ Time spend doing M\&E & $\cdot$ \% work hours times wage\\
+~ & $\cdot$ Time spent travelling & ~\\
+~ & $\cdot$ Time spend reporting & ~\\ 
+~ & ~~or processing feedback & ~\\ \hline
+Saved costs & $\cdot$ Transport costs & $\cdot$ Taxi/bus fares\\
+~ & $\cdot$ M\&E operational costs & $\cdot$ Photocopying, faxing costs etc.\\
+~ & $\cdot$ Overhead costs & $\cdot$ Administrative or data capturing costs\\ \hline
+Data accuracy & $\cdot$ Number of ``correctly''  & $\cdot$ Number of client visit times \\
+~ & ~~recorded client visits & ~~CCG remuneration per client\\
+~ & $\cdot$ Lag time to data submission & $\cdot$ Willingness to pay (WTP) for\\~ & ~ & ~~early warning divided by lag time\\\hline 
+\end{tabular}
+\caption{Monetisation of M\&E costs and associated benefits.}
+\label{tbl:benefits_monetisation}
+\end{table}
+
+The costs of the CCG project can be grouped into investment costs and 
+operational costs. The investment costs would include system design and 
+development, as well as any capital expenditure in order to implement the 
+solution. Training and change management costs would also be classified 
+as an investment cost. Operation costs on the other hand would include 
+the costs associated with system maintenance, user support, data transfer 
+costs, server hosting and back-end services.
+ 
+The present values are calculated for the annual and cumulative 
+costs and benefits. The present values are determined using a simple 
+discounted cash flow technique. The net benefit is determine for both the 
+present and cumulative values as the difference between the total  
+benefits and the total costs. Furthermore, the distribution of the 
+benefits amongst the stakeholders can also be determined.
+The outcome of the cost-benefit analysis is to be able to assess the 
+costs and benefits of the intervention over time and be able to identify 
+when the cumulative benefits exceed the costs.
+   
+\section*{Conclusion}
+
+The project is scheduled to be implemented across the three pilot 
+sites starting on 1 November 2009 and running for six months until 
+the end of April 2010. Obviously, the outcome of the cost-benefit 
+analysis is yet to be determined.  
