@@ -1,6 +1,6 @@
 drop materialized view tbrennan.sapsi_mimic2v30;
 
---create materialized view tbrennan.sapsi_mimic2v30 as 
+create materialized view tbrennan.sapsi_mimic2v30 as 
 
 with SummaryValues as (
   -- find the min and max values for each category and calc_dt
