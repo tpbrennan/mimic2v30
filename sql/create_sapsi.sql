@@ -124,8 +124,8 @@ with SummaryValues as (
     ad.HOSPITAL_EXPIRE_FLG
     from compare_sapsi cs 
     join mornin.v30_admissions ad 
-      on cs.subject_id and ad.subject_id
-     and cs.hadm_id and ad.hadm_id
+      on cs.subject_id = ad.subject_id
+     and cs.hadm_id = ad.hadm_id
 )
 select * from mortality;
 
