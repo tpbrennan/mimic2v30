@@ -16,6 +16,10 @@ select count(distinct subject_id) from mimic2v30.chartevents
 where itemid in (220045, 211); -- 46804 subjects
 
 
+
+
+
+
 -- TEMPARATURE
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
@@ -41,6 +45,10 @@ order by num desc;
 */
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762); -- 44837 subjects
+
+
+
+
 
 
 -- SYSABP
@@ -70,6 +78,10 @@ select count(distinct subject_id) from mimic2v30.chartevents
 where itemid in (51, 455, 225309, 220179, 220050, 227243, 224167); -- 39227 subjects
 
 
+
+
+
+
 -- HCT
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
@@ -86,6 +98,10 @@ order by num desc;
 */
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (813, 220545, 226540, 3761); -- 45067 subjects
+
+
+
+
 
 
 -- WBC
@@ -106,13 +122,26 @@ order by num desc;
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (220546, 1542, 1127, 861, 4200); --43965 subjects
 
+
+
+
+
+
 -- GCS
+select subject_id, text from mimic2v30.noteevents 
+where 
+lower(text) like '%glasgow%' 
+or 
+lower(text) like '%gcs%'; 
+
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
 lower(label) like '%gcs%' 
 or 
 lower(label) like '%glasgow%' 
+or 
+lower(label) like '%coma%' 
 order by num desc;
 /*
 198	GCS Total	960006
@@ -121,6 +150,10 @@ order by num desc;
 */
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (227013,198,226755); --23614 subjects
+
+
+
+
 
 
 -- GLUCOSE
@@ -148,6 +181,11 @@ select count(distinct subject_id) from mimic2v30.chartevents
 where itemid in (807, 811, 1529, 225664, 220621, 226537, 3745, 3744, 1310, 1455, 2338); -- 41617 subjects
 
 
+
+
+
+
+
 -- HCO3
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
@@ -163,6 +201,10 @@ order by num desc;
 */
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (227443); -- 17141 subjects
+
+
+
+
 
 
 -- POTASSIUM
@@ -191,6 +233,9 @@ order by num desc;
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (829, 1535, 3792, 3725, 4194, 227442, 227464); -- 41486 subjects
 
+
+
+
 -- SODIUM
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
@@ -216,6 +261,10 @@ order by num desc;
 */
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (837, 1536, 3726, 3803, 220645, 226534); --  41382 subjects
+
+
+
+
 
 -- BUN
 select distinct itemid, label,
@@ -256,6 +305,8 @@ where itemid in (791, 1525, 3750, 220615); -- 39374 subjects
 
 
 
+
+
 -- URINE 
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.ioevents 
@@ -293,6 +344,9 @@ select count(distinct subject_id) from mimic2v30.ioevents
 where itemid in ( 40056, 43176,40070,40095,40716,40474,40086,40058,40057,
 40406	,40429	,40097	,43172	,43374, 40652	,45928	,43432	,
 43523	,42508	,43590	,43538	,43967	,43463	); -- 26483 subjects
+
+
+
 
 
 
@@ -343,32 +397,12 @@ select distinct itemid, label,
 141	Cuff Pressure-Airway	18449
 */
 select count(distinct subject_id) from mimic2v30.chartevents
-where itemid in (40,
-722,
-39,
-720,
-224697,
-444,
-224685,
-38,
-224695,
-682,
-535,
-683,
-732,
-224686,
-684,
-224684,
-543,
-721,
-227565,
-227566,
-224696,
-3681,
-224417,
-3689,
-141
-);
+where itemid in (40,722,39,720,224697,444,224685,38,
+224695,682,535,683,732,224686,
+684,224684,543,721,227565,227566,224696,3681,224417,3689,141); -- 23960 subjects
+
+
+
 
 
 -- RESP
@@ -381,6 +415,17 @@ lower(label) like '%resp%rate%'
 or 
 lower(label) like '%resp%rate%'
 order by num desc;
-
-select distinct label from mimic2v30.chartevents
-where itemid in (220210,618,653,3603,219,1635,8113,1884,615)
+/*
+618	Respiratory Rate	3433853
+220210	Respiratory Rate	2555576
+3603	Resp Rate	1677429
+615	Resp Rate (Total)	421300
+219	High Resp. Rate	385422
+224689	Respiratory Rate (spontaneous)	378496
+224690	Respiratory Rate (Total)	327087
+619	Respiratory Rate Set	254701
+614	Resp Rate (Spont)	239893
+224688	Respiratory Rate (Set)	194280
+*/
+select count(distinct subject_id) from mimic2v30.chartevents
+where itemid in (219, 618, 614, 619, 615, 220210, 3603, 224689, 224690, 224688); -- 46769 subjects
