@@ -74,14 +74,40 @@ with all_icustay_days as (
           case
             when c.itemid in (220045, 211) 
               and c.time between s.begintime and s.endtime then 'HR'
+            
             when c.itemid in (676, 677, 678, 679, 227054, 223762, 223761) 
               and c.time between s.begintime and s.endtime then 'TEMPERATURE'
+            
             when c.itemid in (51, 455, 225309, 2293) 
               and c.time between s.begintime and s.endtime then 'SYSABP'  -- Invasive/noninvasive BP
+            
             when c.itemid in (781,225624,1162,3737,227000,5876,227001) 
               and c.time between s.begintime and s.endtime then 'BUN'
+            
             when c.itemid in (227013,198,226755)
               and c.time between s.begintime and s.endtime then 'GCS'
+            
+            when c.itemid in (220546, 1542, 1127, 861, 4200) 
+              and c.charttime between s.begintime and s.endtime then 'WBC'
+            
+            when c.itemid in (50112,50936,50006) 
+              and c.charttime between s.begintime and s.endtime then 'GLUCOSE'  
+            
+            when c.itemid in (50803,50022,50172,50025) 
+              and c.charttime between s.begintime and s.endtime then 'HCO3'
+  
+            when c.itemid in (50009,50821,50976,50149)  
+              and c.charttime between s.begintime and s.endtime then 'POTASSIUM'
+  
+            when c.itemid in (50989,50823,50159,50012) 
+              and c.charttime between s.begintime and s.endtime then 'SODIUM'
+  
+            when c.itemid in (51011,50177) 
+              and c.charttime between s.begintime and s.endtime then 'BUN'
+  
+            when c.itemid in (50090,50916) 
+              and c.charttime between s.begintime and s.endtime then 'CREATININE'
+
           end as category,
           case
             when c.itemid in (678, 679, 227054, 223761) then (5/9)*(c.value1num-32)
