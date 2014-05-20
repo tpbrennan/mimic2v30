@@ -295,6 +295,82 @@ where itemid in ( 40056, 43176,40070,40095,40716,40474,40086,40058,40057,
 43523	,42508	,43590	,43538	,43967	,43463	); -- 26483 subjects
 
 
+
+-- VENTILATED
+select distinct itemid, label,
+  count(*) over (partition by itemid) num
+  from mimic2v30.chartevents
+  where 
+  lower(label) like '%ventilator%'
+  or
+  lower(label) like '%waveform%vent%'
+  or
+  lower(label) like '%airway%'
+  or
+  lower(label) like '%cuff%pressure%'
+  or
+  lower(label) like '%peak%insp%pressure%'
+  or
+  lower(label) like '%plateau%pressure%'
+  or
+  lower(label) like '%tidal%volume%'
+  order by num desc;
+/*
+40	Airway Type	514690
+722	Ventilator Type	493412
+39	Airway Size	493101
+720	Ventilator Mode	425004
+224697	Mean Airway Pressure	391088
+444	Mean Airway Pressure	386460
+224685	Tidal Volume (observed)	383104
+38	Airway	379012
+224695	Peak Insp. Pressure	378947
+682	Tidal Volume (Obser)	252045
+535	Peak Insp. Pressure	238583
+683	Tidal Volume (Set)	233230
+732	Waveform-Vent	223955
+224686	Tidal Volume (spontaneous)	220999
+684	Tidal Volume (Spont)	198718
+224684	Tidal Volume (set)	185373
+543	Plateau Pressure	177372
+721	Ventilator No.	80536
+227565	Ventilator Tank #1	77727
+227566	Ventilator Tank #2	77683
+224696	Plateau Pressure	69967
+3681	Ventilator Number	48529
+224417	Cuff Pressure	38603
+3689	Vt [Ventilator]	31674
+141	Cuff Pressure-Airway	18449
+*/
+select count(distinct subject_id) from mimic2v30.chartevents
+where itemid in (40,
+722,
+39,
+720,
+224697,
+444,
+224685,
+38,
+224695,
+682,
+535,
+683,
+732,
+224686,
+684,
+224684,
+543,
+721,
+227565,
+227566,
+224696,
+3681,
+224417,
+3689,
+141
+);
+
+
 -- RESP
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
