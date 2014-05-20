@@ -1,6 +1,6 @@
 drop materialized view tbrennan.sapsi_mimic2v30;
 
-create materialized view tbrennan.sapsi_mimic2v30 as 
+--create materialized view tbrennan.sapsi_mimic2v30 as 
 
 with SummaryValues as (
   -- find the min and max values for each category and calc_dt
@@ -90,7 +90,7 @@ with SummaryValues as (
          count(*) over (partition by subject_id, icustay_id, seq) param_count
     from sapsparameter d
     where d.param_score is not null
-      and d.param_score >= 0
+      and d.param_score = 16
       order by subject_id
 )
 --select * from calc_saps_score; --
@@ -99,13 +99,14 @@ with SummaryValues as (
   select distinct subject_id,
     hadm_id,
     icustay_id,
+    first_value(seq) over (partition by subject_id, icustay_id order by seq) seq_first_sapsi,
     first_value(sapsi) over (partition by subject_id, icustay_id order by seq) sapsi_first,
     min(sapsi) over (partition by subject_id, icustay_id) sapsi_min,
     max(sapsi) over (partition by subject_id, icustay_id) sapsi_max
     from calc_saps_score
     order by subject_id
 )
-
+select distinct icustay_id from final_sapsi;
 
 , compare_sapsi as (
   select fs.*,

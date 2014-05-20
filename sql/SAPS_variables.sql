@@ -59,7 +59,6 @@ with all_icustay_days as (
     from all_icustay_days s
     join tbrennan.mimic3_adults d
       on s.icustay_id = d.icustay_id
-    where lod > 12     
 )
 --select * from AgeParams;
 
@@ -99,7 +98,6 @@ with all_icustay_days as (
           or (c.itemid in (227013,198,226755) and c.value1num between 2 and 15)
          )
      and c.value1num is not null
-     and lod > 12
   )
 --select * from ChartedParams;
 
@@ -134,25 +132,33 @@ with all_icustay_days as (
    join mimic2v30.labevents c 
      on s.icustay_id = c.icustay_id
    where c.charttime between s.begintime and s.endtime
+ 
+ -- are the units the same
    and ((c.itemid in (50383,50029) -- 'HCT'
           and c.valuenum between 5 and 100) -- 0 <> 390
-        or (c.itemid in (51326,50468,50316) -- 'WBC'
+ 
+        or (c.itemid in (51326,50468,50316) -- 'WBC' up to 100000, check units
           and c.valuenum*1000 between 5 and 2000000) -- 0 <> 1,250,000
+ 
         or (c.itemid in (50112,50936,50006)-- 'GLUCOSE'  
           and c.valuenum between 0.5 and 1000) -- -251 <> 3555
+ 
         or (c.itemid in (50803,50022,50172,50025)--'HCO3'
           and c.valuenum between 2 and 100) -- 0 <> 231
+ 
         or (c.itemid in (50009,50821,50976,50149)-- 'POTASSIUM'
           and c.valuenum between 0.5 and 70) -- 0.7	<> 52
+ 
         or (c.itemid in (50989,50823,50159,50012)-- 'SODIUM'
           and c.valuenum between 50 and 300) -- 1.07 <>	1332
+ 
         or (c.itemid in (51011,50177) -- 'BUN'
           and c.valuenum between 1 and 100) -- 0 <> 280
+        
         or (c.itemid in (50090,50916) -- 'CREATININE'
           and c.valuenum between 0 and 30) -- 0	<> 73
      )
      and c.valuenum is not null
-     and lod > 12
   )
 --select * from LabParams;
 
@@ -175,7 +181,6 @@ with all_icustay_days as (
      and c.itemid in ( 40056,40057,40058,40070,40086,40095,40097,40097,40406,
       40429,40474,40535,40652,40716,41923,42367,42508,42511,42677,42811,42860,43054,46181 )
      and c.value is not null   
-     and lod > 12
   )
 --select * from UrineParams;
 
@@ -222,7 +227,6 @@ with all_icustay_days as (
      2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,5593,20002,224684,
      224685,224686,224688,224689,224695,224696,224697,227565,227566))
     -- or (p.starttime between s.begintime and s.endtime and lower(p.label) like 'Intubation')
-     and lod > 12
 )
 --select * from VentilatedRespParams;
 
@@ -244,7 +248,6 @@ with all_icustay_days as (
    where c.time between s.begintime and s.endtime
      and (c.itemid in (220210,618,653,3603,219,1635,8113,1884,615) and c.value1num between 2 and 80)     
      and c.value1num is not null
-     and lod > 12
 )
 --select * from SpontaneousRespParams;
 

@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  16 MAY 2014 10:20
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  16 MAY 2014 10:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**report.tex
+**report
 (./report.tex
 LaTeX2e <2011/06/27>
 Babel <3.9f> and hyphenation patterns for 78 languages loaded.
@@ -280,14 +280,14 @@ Here is how much of TeX's memory you used:
  6110 multiletter control sequences out of 15000+600000
  6983 words of font info for 25 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 38i,7n,38p,238b,364s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,7n,38p,234b,364s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmr12.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mr17.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cms
 y10.pfb>
-Output written on report.pdf (4 pages, 104344 bytes).
+Output written on report.pdf (4 pages, 104530 bytes).
 PDF statistics:
  114 PDF objects out of 1000 (max. 8388607)
  80 compressed objects within 1 object stream

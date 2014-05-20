@@ -15,12 +15,12 @@ names(DATA)
 # SAPSI_COMPARE - MORTALITY
 
 s = summary(DATA$SAPSI_FIRST)
-h = hist(DATA$SAPSI_FIRST,breaks=seq(0,50,by=5))
+h = hist(DATA$SAPSI_FIRST,breaks=seq(0,50,by=2))
 
 popmort=100*sum(DATA$HOSPITAL_EXPIRE_FLG)/nrow(DATA)
 newmort = numeric(0)
 oldmort = numeric(0)
-for ( i in seq(0,45,by=5) ) {
+for ( i in seq(0,48,by=2) ) {
   NEWSAPSI = subset(DATA,DATA$SAPSI_FIRST>=i & DATA$SAPSI_FIRST<i+5)
   newmort = c(newmort, sum(NEWSAPSI$HOSPITAL_EXPIRE_FLG)/nrow(NEWSAPSI))
 
@@ -40,6 +40,15 @@ plot(h$mids,newmort,col="blue",
 legend('topleft',fill=c("red","blue"),
        bty='n',c('MIMIC2V26','MIMIC2V30'))
 dev.off()
+
+
+boxplot(DATA$SAPSI_FIRST~DATA$HOSPITAL_EXPIRE_FLG,
+        xlab='Hospital Mortality',
+        ylab='SAPS-I First')
+
+boxplot(DATA$OLD_SAPSI_FIRST~DATA$HOSPITAL_EXPIRE_FLG,
+        xlab='Hospital Mortality',
+        ylab='SAPS-I First')
 
 #-------------------------------------------------------------------------
 # SAPSI_COMPARE - ERROR

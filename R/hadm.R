@@ -9,9 +9,7 @@ a = boxplot(ADM$DT)
 summary(ADM$DT)
 boxplot(a$out)
 
-SDT = subset(ADM,abs(ADM$DT) < 28)
-boxplot(SDT$DT)
-58758 - 57900
-hist(SDT$DT,
+SDT = subset(ADM,abs(ADM$DT) < 5)
+hist(SDT$DT,breaks=seq(-5,5,by=0.1),
      xlab="Time (days)",
      main="Histogram of time between ICU and Hospital Admission")
