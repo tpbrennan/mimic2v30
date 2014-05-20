@@ -29,6 +29,15 @@ or
 lower(label) like '%farenheit%'
 order by num desc;
 /*
+226329	Blood Temperature CCO (C)	60803 ?
+677	Temperature C (calc)	783760
+3655	Temp Skin [C]	533228
+3652	Temp Axillary [F]	462116
+676	Temperature C	381239
+223762	Temperature Celsius	70207
+223761	Temperature Fahrenheit	500128
+678	Temperature F	785285
+679	Temperature F (calc)	378707
 */
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (676, 677, 678, 679, 227054, 223762, 223761); -- 39076 subjects
