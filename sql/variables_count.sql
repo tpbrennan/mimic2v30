@@ -46,7 +46,7 @@ order by num desc;
 */
 select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
 where itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762); 
--- TEMPERATURE: 44837 subjects
+-- TEMPERATURE: 44837 subjects,	55422	icustays, 71458 max icustay_id
 
 
 
@@ -78,7 +78,7 @@ order by num desc;
 */
 select count(distinct subject_id),count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
 where itemid in (51, 455, 225309, 220179, 220050, 227243, 224167); 
--- 39227 subjects
+-- 39227	50048	71458
 
 
 
