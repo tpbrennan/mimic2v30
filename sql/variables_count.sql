@@ -12,8 +12,9 @@ order by num desc;
 220045	Heart Rate	2579620
 211	Heart Rate	5231565
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (220045, 211); -- 46804 subjects
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
+where itemid in (220045, 211); 
+-- HR: 46804	subjects, 56781	icustays, 71458 max icustay_id
 
 
 
@@ -43,8 +44,9 @@ order by num desc;
 678	Temperature F	785285
 679	Temperature F (calc)	378707
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762); -- 44837 subjects
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
+where itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762); 
+-- TEMPERATURE: 44837 subjects
 
 
 
@@ -52,7 +54,7 @@ where itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762); -- 448
 
 
 -- SYSABP
-select distinct itemid, label,
+select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
 lower(label) like '%systolic%' 
@@ -74,8 +76,9 @@ order by num desc;
 224167	Manual Blood Pressure Systolic Left	721
 227243	Manual Blood Pressure Systolic Right	526
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (51, 455, 225309, 220179, 220050, 227243, 224167); -- 39227 subjects
+select count(distinct subject_id),count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
+where itemid in (51, 455, 225309, 220179, 220050, 227243, 224167); 
+-- 39227 subjects
 
 
 
@@ -83,7 +86,7 @@ where itemid in (51, 455, 225309, 220179, 220050, 227243, 224167); -- 39227 subj
 
 
 -- HCT
-select distinct itemid, label,
+select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
 lower(label) like '%hematocrit%' 
@@ -96,8 +99,34 @@ order by num desc;
 226540	Hematocrit (whole blood - calc)	15232
 3761	Hematocrit (35-51)	12517
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (813, 220545, 226540, 3761); -- 45067 subjects
+select distinct itemid, test_name, valueuom,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%hematocrit%' 
+or 
+lower(test_name) like '%hct%' 
+order by num desc;
+/*
+50383	HCT	%	596638
+51243	Hematocrit	%	274546
+50029	calcHCT	%	62387
+50809	Hematocrit, Calculated	%	26730
+50604	HCT	%	185
+50582	HCT	%	171
+50302	HCT	%	106
+50535	HCT	%	44
+50514	HCT	%	31
+50643	HCT	%	4
+51512	Hematocrit	%	2
+*/
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (813, 220545, 226540, 3761)
+  union 
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50383,51243,50029,50809,50604,50582,50302,50535,50514,50643,51512) 
+)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+-- HCT: 46712	subjects, 56403	icustays, 71458 max icustay
+
 
 
 
@@ -105,7 +134,7 @@ where itemid in (813, 220545, 226540, 3761); -- 45067 subjects
 
 
 -- WBC
-select distinct itemid, label,
+select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
 lower(label) like '%wbc%' 
@@ -119,9 +148,34 @@ order by num desc;
 1127	WBC   (4-11,000)	171685
 861	WBC (4-11,000)	180449
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (220546, 1542, 1127, 861, 4200); --43965 subjects
-
+select distinct itemid, test_name, valueuom,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%wbc%' 
+or 
+lower(test_name) like '%white%blood%cell%' 
+order by num desc;
+/*
+50468	WBC	K/uL	506659
+51327	White Blood Cells	K/uL	235686
+50674	WBC	#/hpf	58716
+51550	WBC	#/hpf	26153
+50527	WBC	#/uL	4101
+50314	WBC	#/CU MM	2016
+50314	WBC	#/uL	2016
+50316	 WBC	K/uL	2013
+50617	WBC	#/uL	1745
+50599	WBC	#/uL	1098
+50548	WBC	#/uL	467
+51326	WBC Count	K/uL	218
+*/
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (220546, 1542, 1127, 861, 4200)
+  union 
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50468,51327,50674,51550,50527,50314,50314,50316,50617,50599,50548,51326) 
+)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+-- WBC: 46635	subjects, 55827	icustays, 71458 max icustay
 
 
 
@@ -172,9 +226,34 @@ order by num desc;
 1455	fingerstick glucose	5
 2338	finger stick glucose	2
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (807, 811, 1529, 225664, 220621, 226537, 3745, 3744, 1310, 1455, 2338); -- 41617 subjects
 
+select distinct itemid, test_name,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%glucose%' 
+or 
+lower(test_name) like '%bs%' 
+order by num desc;
+/*
+50112	GLUCOSE	490332
+50936	Glucose	307488
+50006	GLUCOSE	138255
+50641	GLUCOSE	79620
+51510	Glucose	34317
+50201	GLUCOSE	2896
+50240	GLUCOSE	1467
+50043	GLUCOSE	714
+50217	GLUCOSE	301
+50208	GLUCOSE	47
+50266	GLUCOSE	43
+*/
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (807, 811, 1529, 225664, 220621, 226537, 3745, 3744, 1310, 1455, 2338)
+  union 
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50112,50936,50006,50641,51510,50201,50240,50043,50217,50208,50266) 
+)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+-- GLUCOSE: 43114	subjects, 52677	icustays, 71458 max icustay
 
 
 
@@ -210,25 +289,28 @@ select distinct itemid, label,
 where 
 lower(label) like '%bicarbonate%' 
 or 
-lower(label) like '%bicarb%' 
-or 
 lower(label) like '%hco3%' 
 or 
 lower(label) like '%tco2%' 
 or 
-lower(label) like '%total%co2%' 
+lower(label) like '%total co2%' 
 order by num desc;
 /*
 227443	HCO3 (serum)	134238
+225698	TCO2 (calc) Arterial	117912
+3810	Total CO2	21723
+3808	TCO2        (21-30)	9234
+3809	TCO2 (other)	8436
+4199	TCO2 (cap)	8098
+223679	TCO2 (calc) Venous	3912
 */
-
 with subjects as (
-  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (227443)
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (3808, 3809, 3810, 4199, 223679, 225698, 227443)
   union 
   select subject_id, icustay_id from mimic2v30.labevents where itemid in (50172,50025,50886,50803,50022,50802,50279,50230) 
 )
-select count(distinct icustay_id), max(icustay_id) from subjects;
--- 17436 subjects, 19531 icustays, 71458 max(icustay_id)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+-- HCO3: 42946 subjects, 52727 icustays, 71458 max(icustay_id)
 
 
 
@@ -236,6 +318,29 @@ select count(distinct icustay_id), max(icustay_id) from subjects;
 
 
 -- POTASSIUM
+select distinct itemid, test_name,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%potassium%' 
+or 
+lower(test_name) like '%blood%k%' 
+or 
+lower(test_name) like '%serum%k%' 
+or 
+lower(test_name) like '%k%serum%' 
+or 
+lower(test_name) like '%k%blood%' 
+order by num desc;
+/*
+50149	POTASSIUM	561230
+50976	Potassium	273239
+50821	Potassium, Whole Blood	55521
+50275	POTASSIUM	4132
+50251	POTASSIUM	81
+50225	POTASSIUM	60
+50048	POTASSIUM	30
+50243	POTASSIUM	11
+*/
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
@@ -258,14 +363,18 @@ order by num desc;
 3725	ABG POTASSIUM	114
 4194	ABG Potassium	109
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (829, 1535, 3792, 3725, 4194, 227442, 227464); -- 41486 subjects
-
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (829, 1535, 3792, 3725, 4194, 227442, 227464)
+  union 
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50149, 50976, 50821, 50275, 50251, 50225, 50048, 50243)
+)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+-- POTASSIUM: 42599	subjects, 52944	icustays, 71458 max icustay
 
 
 
 -- SODIUM
-select distinct itemid, label,
+select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
 lower(label) like '%sodium%' 
@@ -287,15 +396,44 @@ order by num desc;
 3726	ABG SODIUM	52
 4195	ABG Sodium	47
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (837, 1536, 3726, 3803, 220645, 226534); --  41382 subjects
+select distinct itemid, test_name, valueuom,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%sodium%' 
+or 
+lower(test_name) like '%blood%na%' 
+or 
+lower(test_name) like '%serum%na%' 
+or 
+lower(test_name) like '%na%serum%' 
+or 
+lower(test_name) like '%na%blood%' 
+order by num desc;
+/*
+50159	SODIUM	528292
+50989	Sodium	268674
+50823	Sodium, Whole Blood	24684
+50277	SODIUM	16454
+50252	SODIUM	82
+50226	SODIUM	66
+50049	SODIUM	37
+50244	SODIUM	11
+*/
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (837, 1536, 3726, 3803, 220645, 226534)
+  union 
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50159, 50989, 50823, 50277, 50252, 50226, 50049, 50244)
+)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+-- SODIUM: 42572 subjects,	52776	icustays, 71458 max icustay
+
 
 
 
 
 
 -- BUN
-select distinct itemid, label,
+select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
 lower(label) like '%bun%' 
@@ -308,14 +446,31 @@ order by num desc;
 225624 BUN 134066
 3737 BUN (6-20) 2139
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (781, 1162, 3737, 225624); -- 39379 subjects
+select distinct itemid, test_name, valueuom,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%bun%' 
+or 
+lower(test_name) like '%blood%urea%nitrogren%' 
+or 
+lower(test_name) like '%nitrogren%' 
+order by num desc;
+/*
+NONE
+*/
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (781, 1162, 3737, 225624)
+)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+ -- 39379	subjects, 50545 icustays, 71458 max icustays
+
+
 
 
 
 
 -- CREATININE
-select distinct itemid, label,
+select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
 lower(label) like '%creatinine%' 
@@ -328,8 +483,29 @@ order by num desc;
 220615	Creatinine	134556
 3750	Creatinine   (0-0.7)	2103
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (791, 1525, 3750, 220615); -- 39374 subjects
+select distinct itemid, test_name, valueuom,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%creatinine%' 
+or 
+lower(test_name) like '%creat%' 
+order by num desc;
+/*
+51093	Creatinine, Serum	mg/dL	23
+50239	CREAT	mg/dL	179
+50042	CREAT	mg/dL	304
+50216	CREAT	mg/dL	282
+50264	CREAT	mg/dL	22225
+50916	Creatinine	mg/dL	259257
+50090	CREAT	mg/dL	526309
+*/
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (791, 1525, 3750, 220615)
+  union 
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50090,50916,50264,50042,50216,50239,51093)
+)
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
+-- CREATININE: 40669 subjects,	50786	icustays, 71458 max icustay
 
 
 
