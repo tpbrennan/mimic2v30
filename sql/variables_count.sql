@@ -128,12 +128,6 @@ where itemid in (220546, 1542, 1127, 861, 4200); --43965 subjects
 
 
 -- GCS
-select subject_id, text from mimic2v30.noteevents 
-where 
-lower(text) like '%glasgow%' 
-or 
-lower(text) like '%gcs%'; 
-
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
@@ -148,8 +142,9 @@ order by num desc;
 226755	GcsApacheIIScore	9
 227013	GcsScore_ApacheIV	7
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (227013,198,226755); --23614 subjects
+--select count(distinct subject_id) from mimic2v30.chartevents 
+select max(icustay_id) from mimic2v30.chartevents
+where itemid in (227013,198,226755); --23614 subjects, max icustay_id 69434
 
 
 
@@ -187,6 +182,29 @@ where itemid in (807, 811, 1529, 225664, 220621, 226537, 3745, 3744, 1310, 1455,
 
 
 -- HCO3
+select distinct itemid, test_name,
+  count(*) over (partition by itemid) num from mimic2v30.labevents 
+where 
+lower(test_name) like '%bicarbonate%' 
+or 
+lower(test_name) like '%bicarb%' 
+or 
+lower(test_name) like '%hco3%' 
+or
+lower(test_name) like '%tco2%' 
+or
+lower(test_name) like '%total%co2%' 
+order by num desc;
+/*
+50172	TOTAL CO2	516264
+50025	TOTAL CO2	344364
+50886	Bicarbonate	253894
+50803	Calculated Total CO2	144006
+50022	TCO2	5658
+50802	Calculated Bicarbonate, Whole Blood	3538
+50279	TOTAL CO2	921
+50230	TOTAL CO2	50
+*/
 select distinct itemid, label,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
 where 
@@ -195,12 +213,22 @@ or
 lower(label) like '%bicarb%' 
 or 
 lower(label) like '%hco3%' 
+or 
+lower(label) like '%tco2%' 
+or 
+lower(label) like '%total%co2%' 
 order by num desc;
 /*
 227443	HCO3 (serum)	134238
 */
-select count(distinct subject_id) from mimic2v30.chartevents 
-where itemid in (227443); -- 17141 subjects
+
+with subjects as (
+  select subject_id, icustay_id from mimic2v30.chartevents where itemid in (227443)
+  union 
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50172,50025,50886,50803,50022,50802,50279,50230) 
+)
+select count(distinct icustay_id), max(icustay_id) from subjects;
+-- 17436 subjects, 19531 icustays, 71458 max(icustay_id)
 
 
 
@@ -340,10 +368,11 @@ order by num desc;
 43967	real urine output	6
 43463	urine	6
 */
-select count(distinct subject_id) from mimic2v30.ioevents 
+--select count(distinct subject_id) from mimic2v30.ioevents 
+select max(icustay_id) from mimic2v30.ioevents
 where itemid in ( 40056, 43176,40070,40095,40716,40474,40086,40058,40057,
 40406	,40429	,40097	,43172	,43374, 40652	,45928	,43432	,
-43523	,42508	,43590	,43538	,43967	,43463	); -- 26483 subjects
+43523	,42508	,43590	,43538	,43967	,43463	); -- 26483 subjects, 47532 max icustay_id
 
 
 
@@ -396,10 +425,11 @@ select distinct itemid, label,
 3689	Vt [Ventilator]	31674
 141	Cuff Pressure-Airway	18449
 */
-select count(distinct subject_id) from mimic2v30.chartevents
+--select count(distinct subject_id) from mimic2v30.chartevents
+select max(icustay_id) from mimic2v30.chartevents
 where itemid in (40,722,39,720,224697,444,224685,38,
 224695,682,535,683,732,224686,
-684,224684,543,721,227565,227566,224696,3681,224417,3689,141); -- 23960 subjects
+684,224684,543,721,227565,227566,224696,3681,224417,3689,141); -- 23960 subjects, max icustay_id 71458
 
 
 
@@ -429,3 +459,10 @@ order by num desc;
 */
 select count(distinct subject_id) from mimic2v30.chartevents
 where itemid in (219, 618, 614, 619, 615, 220210, 3603, 224689, 224690, 224688); -- 46769 subjects
+
+
+On a related note, I've been looking through MIMIC2V30 for the SAPS variables. I've been able to track down most SAPS data using both CHARTEVENTS tables, except the following
+GCS data from CHARTEVENTS for 23614 subjects, max icustay_id 69434
+HCO3 data from CHARTEVENTS for 17141 subjects, max icustay_id 71,458
+VENTILATED data from CHARTEVENTS for 23960 subjects, max icustay_id 71458
+Urine Out data from IOEVENTS for 26483 subjects, max icustay_id 47532 
