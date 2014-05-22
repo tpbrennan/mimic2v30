@@ -63,9 +63,15 @@ lower(label) like '%blood%pressure%'
 or 
 lower(label) like '%nbp%'
 or 
+lower(label) like '%ibp%'
+or 
 lower(label) like '%abp%'
 or 
-lower(label) like '%arterial%bp%'
+lower(label) like '%art%bp%'
+or 
+lower(label) like '%manual%bp%'
+or 
+label like '%BP%'
 order by num desc;
 /*
 51	Arterial BP	2117328
@@ -75,10 +81,12 @@ order by num desc;
 225309	ART BP Systolic	83205
 224167	Manual Blood Pressure Systolic Left	721
 227243	Manual Blood Pressure Systolic Right	526
+6701	Arterial BP #2	mmHg	19279
+3313	BP Cuff [S/D]	cc/min	148170
 */
 select count(distinct subject_id),count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
-where itemid in (51, 455, 225309, 220179, 220050, 227243, 224167); 
--- 39227	50048	71458
+where itemid in (51, 442, 455, 225309, 220179, 220050, 227243, 224167, 6701, 3313); 
+-- SYSABP: subjects 39227, 50048	71458
 
 
 
