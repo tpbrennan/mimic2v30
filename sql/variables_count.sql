@@ -86,8 +86,7 @@ order by num desc;
 */
 select count(distinct subject_id),count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
 where itemid in (51, 442, 455, 225309, 220179, 220050, 227243, 224167, 6701, 3313); 
--- SYSABP: subjects 39227, 50048	71458
-
+-- SYSABP: 46533 subjects,	55995	icustays, 71458 max icustay_id
 
 
 
@@ -520,43 +519,142 @@ select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) f
 
 
 -- URINE 
-select distinct itemid, label,
+select distinct itemid, label, uom,
+  count(*) over (partition by itemid) num from mimic2v30.ioevents 
+  where itemid in (651, 715, 55, 56, 57, 61, 65, 69, 85, 94, 96, 288, 405,
+                      428, 473, 2042, 2068, 2111, 2119, 2130, 1922, 2810, 2859,
+                      3053, 3462, 3519, 3175, 2366, 2463, 2507, 2510, 2592,
+                      2676, 3966, 3987, 4132, 4253, 5927, 40056, 43176,40070,
+                      40095,40716,40474,40086,40058,40057, 40406	,40429	,
+                      40097	,43172	,43374, 40652	,45928	,43432	,
+                      43523	,42508	,43590	,43538	,43967	,43463)
+  order by num desc;	
+/*
+40056	Urine Out Foley	ml	1938312
+43176	Urine .	ml	109042
+40070	Urine Out Void	ml	70733
+40095	Urine Out Condom Cath	ml	10240
+40716	Urine Out Suprapubic	ml	6985
+40474	Urine Out IleoConduit	ml	4827
+40086	Urine Out Incontinent	ml	2934
+40058	Urine Out Rt Nephrostomy	ml	2797
+40057	Urine Out Lt Nephrostomy	ml	2729
+40406	Urine Out Other	ml	1829
+40429	Urine Out Straight Cath	ml	723
+40097	Urine Out Ureteral Stent #1	ml	418
+43172	URINE CC/KG/HR	ml	314
+43374	urine cc/kg/hr	ml	122
+40652	Urine Out Ureteral Stent #2	ml	90
+45928	True Urine	ml	45
+43432	Urine cc/k/hr	ml	43
+43523	Urine cc/kg/hr	ml	30
+42508	TRUE URINE	ml	27
+43590	urine cc/k/hr	ml	10
+43538	urine o/p	ml	7
+43967	real urine output	ml	6
+43463	urine	ml	6
+*/
+select distinct itemid, label, uom,
   count(*) over (partition by itemid) num from mimic2v30.ioevents 
 where 
 lower(label) like '%urine%' 
 or 
-lower(label) like '%urine%out%'
+lower(label) like '%urine out%'
+or 
+lower(label) like '%foley%'
 order by num desc;
 /*
-40056	Urine Out Foley	1938312
-43176	Urine .	109042
-40070	Urine Out Void	70733
-40095	Urine Out Condom Cath	10240
-40716	Urine Out Suprapubic	6985
-40474	Urine Out IleoConduit	4827
-40086	Urine Out Incontinent	2934
-40058	Urine Out Rt Nephrostomy	2797
-40057	Urine Out Lt Nephrostomy	2729
-40406	Urine Out Other	1829
-40429	Urine Out Straight Cath	723
-40097	Urine Out Ureteral Stent #1	418
-43172	URINE CC/KG/HR	314
-43374	urine cc/kg/hr	122
-40652	Urine Out Ureteral Stent #2	90
-45928	True Urine	45
-43432	Urine cc/k/hr	43
-43523	Urine cc/kg/hr	30
-42508	TRUE URINE	27
-43590	urine cc/k/hr	10
-43538	urine o/p	7
-43967	real urine output	6
-43463	urine	6
+40056	Urine Out Foley	ml	1938312
+226559	Foley	mL	890514
+43176	Urine .	ml	109042
+40070	Urine Out Void	ml	70733
+40095	Urine Out Condom Cath	ml	10240
+40066	OR Out PACU Urine	ml	7749
+40062	OR Out OR Urine	ml	7376
+40716	Urine Out Suprapubic	ml	6985
+40474	Urine Out IleoConduit	ml	4827
+40086	Urine Out Incontinent	ml	2934
+40058	Urine Out Rt Nephrostomy	ml	2797
+40057	Urine Out Lt Nephrostomy	ml	2729
+227489	GU Irrigant/Urine Volume Out	mL	2111
+40406	Urine Out Other	ml	1829
+40289	PACU Out PACU Urine	ml	1148
+40429	Urine Out Straight Cath	ml	723
+226631	PACU Urine	mL	419
+40097	Urine Out Ureteral Stent #1	ml	418
+43172	URINE CC/KG/HR	ml	314
+43374	urine cc/kg/hr	ml	122
+40652	Urine Out Ureteral Stent #2	ml	90
+40652	Urine Out Ureteral Stent #2		90
+45928	True Urine	ml	45
+44205	Foley Catheter	ml	34
+43432	Urine cc/k/hr	ml	43
+43523	Urine cc/kg/hr	ml	30
+42508	TRUE URINE	ml	27
+44168	foley flush	ml	21
+42523	FOLEY FLUSH	ml	13
+43590	urine cc/k/hr	ml	10
+42811	angio urine out	ml	7
+44758	Foley Cath	ml	7
+43538	urine o/p	ml	7
+42043	ANGIO URINE OUT	ml	6
+42677	ANGIO URINE OUTPUT	ml	6
+43967	real urine output	ml	6
+43463	urine	ml	6
+43655	urine o/p cc/kg/hr	ml	6
+42120	urine output-angio	ml	6
+42363	CATH LAB URINE OUTPT	ml	5
+43381	urine outpt cc/kg/hr	ml	5
+43366	urine output/kg/hr	ml	5
+43366	urine output/kg/hr		5
+42860	ANGIO URINE	ml	4
+42464	cath lab urine	ml	4
+44133	Procedure urine out	ml	4
+42367	angio urine output	ml	4
+44685	floor urine out	ml	4
+44926	true urine	ml	4
+43520	urine amnt	ml	4
+43349	urine output/kg	ml	4
+43356	urine/k/hr	ml	4
+42131	ANGIO URINE O/P	ml	3
+43380	URINECC/KG/HR	ml	3
+43380	URINECC/KG/HR		3
+45305	Urine output cc/k/hr	ml	3
+45305	Urine output cc/k/hr		3
+41923	angio urine	ml	3
+44753	inc urine	ml	3
+40535	urine flush	ml	3
+43812	urine out: cc/k/hr	ml	3
+43174	urinecc/kg/hr	ml	3
+43577	24hr Urine cc/kg/hr	ml	2
+43373	24hr urine output	ml	2
+43375	URINE CC?KG?HR	ml	2
+43054	URINE OUT	ml	2
+44254	Urine out angio	ml	2
+43634	Urine,cc/kg/day	ml	2
+45842	bladder irrig/urine	ml	2
+43334	urine cc's/k/hr	ml	2
+43857	urine cc/k/ghr	ml	2
+43348	urine cc/kg	ml	2
+43988	urine out or	ml	2
+46181	urine out-angio	ml	2
+44707	urine output	ml	2
+43639	urine output cc/k/hr	ml	2
+46178	URINE OUT-ANGIO	ml	1
+42069	angio Urine output	ml	1
+43813	urine out:cc/k/hr	ml	1
 */
 --select count(distinct subject_id) from mimic2v30.ioevents 
-select max(icustay_id) from mimic2v30.ioevents
-where itemid in ( 40056, 43176,40070,40095,40716,40474,40086,40058,40057,
-40406	,40429	,40097	,43172	,43374, 40652	,45928	,43432	,
-43523	,42508	,43590	,43538	,43967	,43463	); -- 26483 subjects, 47532 max icustay_id
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from mimic2v30.ioevents
+where itemid in (40056,226559,43176,40070,40095,40066,40062,
+40716,40474,40086,40058,40057,227489,40406,40289,40429,226631,40097,43172,
+43374,40652,40652,45928,44205,43432,43523,42508,44168,42523,43590,42811,
+44758,43538,42043,42677,43967,43463,43655,42120,42363,43381,43366,43366,
+42860,42464,44133,42367,44685,44926,43520,43349,43356,42131,43380,43380,
+45305,45305,41923,44753,40535,43812,43174,43577,43373,43375,43054,44254,
+43634,45842,43334,43857,43348,43988,46181,44707,43639,46178,42069,43813);
+-- MIMIC2V30 URINE: 26843	subjects, 32488	icustays, 47532 max icustay_id
+-- MIMIC2V30 URINE: 38878	subjects, 49033	icustays, 71458 max icustay_id
 
 
 
@@ -564,7 +662,7 @@ where itemid in ( 40056, 43176,40070,40095,40716,40474,40086,40058,40057,
 
 
 -- VENTILATED
-select distinct itemid, label,
+select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num
   from mimic2v30.chartevents
   where 
@@ -609,14 +707,37 @@ select distinct itemid, label,
 3689	Vt [Ventilator]	31674
 141	Cuff Pressure-Airway	18449
 */
---select count(distinct subject_id) from mimic2v30.chartevents
-select max(icustay_id) from mimic2v30.chartevents
-where itemid in (40,722,39,720,224697,444,224685,38,
-224695,682,535,683,732,224686,
-684,224684,543,721,227565,227566,224696,3681,224417,3689,141); -- 23960 subjects, max icustay_id 71458
+select distinct itemid, label, 
+  count(*) over (partition by itemid) num
+from mimic2v30.procedureevents 
+where 
+lower(label) like '%intub%'
+or 
+lower(label) like '%ventilat%'
+order by num desc;
+/*
+225792	Invasive Ventilation	8607
+224385	Intubation	3494
+101750	RESP TRACT INTUBAT NEC   	459
+100883	CHOLEDOCHOHEPAT INTUBAT  	7
+100230	MYRINGOTOMY W INTUBATION 	2
+100186	NASOLAC DUCT INTUBAT     	1 
+*/
+
+with subjects as (
+  select subject_id, hadm_id from mimic2v30.chartevents 
+    where itemid in (40,722,39,720,224697,444,224685,38,224695,682,535,683,732,224686,
+                      684,224684,543,721,227565,227566,224696,3681,224417,3689,141)
+  union 
+  select subject_id, hadm_id from mimic2v30.procedureevents where itemid in (225792,100230,100186,100883,224385,101750)
+)
+select count(distinct subject_id), count(distinct hadm_id), max(hadm_id) from subjects;
+-- VENTILATED: 24038 subjects,	10208 icustays,	58847 max hadm_id
 
 
 
+
+  
 
 
 -- RESP
@@ -641,12 +762,9 @@ order by num desc;
 614	Resp Rate (Spont)	239893
 224688	Respiratory Rate (Set)	194280
 */
-select count(distinct subject_id) from mimic2v30.chartevents
-where itemid in (219, 618, 614, 619, 615, 220210, 3603, 224689, 224690, 224688); -- 46769 subjects
+select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents
+where itemid in (219, 618, 614, 619, 615, 220210, 3603, 224689, 224690, 224688); 
+-- RESP: 46769 subjects,	56737	icustays, 71458 max icustay_id
 
 
-On a related note, I've been looking through MIMIC2V30 for the SAPS variables. I've been able to track down most SAPS data using both CHARTEVENTS tables, except the following
-GCS data from CHARTEVENTS for 23614 subjects, max icustay_id 69434
-HCO3 data from CHARTEVENTS for 17141 subjects, max icustay_id 71,458
-VENTILATED data from CHARTEVENTS for 23960 subjects, max icustay_id 71458
-Urine Out data from IOEVENTS for 26483 subjects, max icustay_id 47532 
+
