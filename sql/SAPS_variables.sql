@@ -85,15 +85,13 @@ with all_icustay_days as (
             
             when c.itemid in (51, 442, 455, 225309, 220179, 220050, 227243, 224167, 6701, 3313) 
               and c.time between s.begintime and s.endtime then 'SYSABP'  
-            
-            when c.itemid in (813, 220545, 226540, 3761)
-              and c.time between s.begintime and s.endtime then 'HCT'
-              
-            when c.itemid in (781,225624,1162,3737,227000,5876,227001) 
-              and c.time between s.begintime and s.endtime then 'BUN'
-            
+
             when c.itemid in (227013,198,226755)
               and c.time between s.begintime and s.endtime then 'GCS'
+
+/*            
+            when c.itemid in (813, 220545, 226540, 3761)
+              and c.time between s.begintime and s.endtime then 'HCT'
             
             when c.itemid in (220546, 1542, 1127, 861, 4200)
               and c.time between s.begintime and s.endtime then 'WBC'
@@ -115,6 +113,7 @@ with all_icustay_days as (
   
             when c.itemid in (791, 1525, 3750, 220615) 
               and c.time between s.begintime and s.endtime then 'CREATININE'
+*/
 
           end as category,
           case
@@ -134,6 +133,9 @@ with all_icustay_days as (
           or 
           (c.itemid in (678, 679, 3652, 227054, 223761) and (5/9)*(c.value1num-32) between 15 and 45) -- TEMP FARENHEIT
           or 
+          (c.itemid in (227013,198,226755) and c.value1num between 2 and 15) -- GCS
+/*
+          or 
           (c.itemid in (813, 220545, 226540, 3761) and c.value1num between 5 and 100) -- HCT
           or
           (c.itemid in (220546, 1542, 1127, 861, 4200) and c.value1num between 0 and 1000000) -- WBC
@@ -149,8 +151,7 @@ with all_icustay_days as (
           (c.itemid in (781, 1162, 3737, 225624) and c.value1num between 1 and 100) -- BUN
           or
           (c.itemid in (791, 1525, 3750, 220615) and c.value1num between 0 and 30) -- CREATININE
-          or 
-          (c.itemid in (227013,198,226755) and c.value1num between 2 and 15) -- GCS
+*/
          )
      and c.value1num is not null
   )
@@ -171,28 +172,28 @@ with all_icustay_days as (
           s.seq,
           s.lod,
           case
-            when c.itemid in (50383,51243,50029,50809,50604,50582,50302,50535,50514,50643,51512)
+            when c.itemid in (50383,51243,50029,50809)
               and c.charttime between s.begintime and s.endtime then 'HCT'
               
-            when c.itemid in (50468,51327,50674,51550,50527,50314,50314,50316,50617,50599,50548,51326) 
+            when c.itemid in (50468,51327,50316,51326)
               and c.charttime between s.begintime and s.endtime then 'WBC'
               
-            when c.itemid in (50112,50936,50006,50641,51510,50201,50240,50043,50217,50208,50266) 
+            when c.itemid in (50112, 50936, 50006)
               and c.charttime between s.begintime and s.endtime then 'GLUCOSE'  
               
-            when c.itemid in (50172,50025,50886,50803,50022,50802,50279,50230) 
+            when c.itemid in (50172,50025,50886,50803,50022,50802) 
               and c.charttime between s.begintime and s.endtime then 'HCO3'
               
-            when c.itemid in (50149, 50976, 50821, 50275, 50251, 50225, 50048, 50243)  
+            when c.itemid in  (50149,50976) 
               and c.charttime between s.begintime and s.endtime then 'POTASSIUM'
               
-            when c.itemid in (50159, 50989, 50823, 50277, 50252, 50226, 50049, 50244) 
+            when c.itemid in (50159, 50989) 
               and c.charttime between s.begintime and s.endtime then 'SODIUM'
             
-            when c.itemid in (50177,51011,50283,50232,50053) 
+            when c.itemid in (50177,51011) 
               and c.charttime between s.begintime and s.endtime then 'BUN'
             
-            when c.itemid in (50090,50916,50264,50042,50216,50239,51093)
+            when c.itemid in (50090, 50916)
               and c.charttime between s.begintime and s.endtime then 'CREATININE'
           end as category,
           valuenum
@@ -202,29 +203,28 @@ with all_icustay_days as (
      on s.icustay_id = c.icustay_id
    where c.charttime between s.begintime and s.endtime
  
- -- are the units the same
-   and ((c.itemid in (50383,51243,50029,50809,50604,50582,50302,50535,50514,50643,51512) -- 'HCT'
+   and ((c.itemid in (50383,51243,50029,50809) -- 'HCT'
           and c.valuenum between 5 and 100) -- 0 <> 390
  
-        or (c.itemid in (50468,51327,50674,51550,50527,50314,50314,50316,50617,50599,50548,51326) -- 'WBC' up to 100000, check units
+        or (c.itemid in  (50468,51327,50316,51326) -- 'WBC' 
           and c.valuenum between 5 and 1000000) -- 0 <> 1,250,000
  
-        or (c.itemid in (50112,50936,50006,50641,51510,50201,50240,50043,50217,50208,50266) -- 'GLUCOSE'  
+        or (c.itemid in (50112, 50936, 50006) -- 'GLUCOSE'  
           and c.valuenum between 0.5 and 1000) -- -251 <> 3555
  
-        or (c.itemid in (50172,50025,50886,50803,50022,50802,50279,50230)--'HCO3'
+        or (c.itemid in (50172,50025,50886,50803,50022,50802)--'HCO3'
           and c.valuenum between 2 and 100) -- 0 <> 231
  
-        or (c.itemid in (50149, 50976, 50821, 50275, 50251, 50225, 50048, 50243)-- 'POTASSIUM'
+        or (c.itemid in (50149,50976) -- 'POTASSIUM'
           and c.valuenum between 0.5 and 70) -- 0.7	<> 52
  
-        or (c.itemid in (50159, 50989, 50823, 50277, 50252, 50226, 50049, 50244)-- 'SODIUM'
+        or (c.itemid in (50159, 50989)-- 'SODIUM'
           and c.valuenum between 50 and 300) -- 1.07 <>	1332
  
-        or (c.itemid in (50177,51011,50283,50232,50053) -- 'BUN'
+        or (c.itemid in (50177,51011) -- 'BUN'
           and c.valuenum between 1 and 100) -- 0 <> 280
         
-        or (c.itemid in (50090,50916,50264,50042,50216,50239,51093) -- 'CREATININE'
+        or (c.itemid in (50090, 50916) -- 'CREATININE'
           and c.valuenum between 0 and 30) -- 0	<> 73
      )
      and c.valuenum is not null

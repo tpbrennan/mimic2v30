@@ -1,8 +1,9 @@
-select distinct test_name from mimic2v26.d_labitems where itemid in (50803,50022,50172,50025);
+select distinct parameterid, parametername 
+from mv_adult_101212.parameters 
+where lower(parametername) like '%gcs%';
 
-select parameterid, parametername from mv_adult_101212.parameters where lower(parametername) like '%gcs%';
-
-select * from mv_adult_101212.signals where parameterid in (739,3900,3901,6755,6756,6757,6758,7011,7012,7013,7014,8112);
+select * from mv_adult_101212.signals 
+where parameterid in (739,3900,3901,6755,6756,6757,6758,7011,7012,7013,7014,8112);
 
 with tables as (
   select distinct table_name,
