@@ -1,5 +1,5 @@
 drop materialized view tbrennan.saps_variables_mimic2v30;
---create materialized view tbrennan.saps_variables_mimic2v30 as
+create materialized view tbrennan.saps_variables_mimic2v30 as
 
 with all_icustay_days as (
 
@@ -62,6 +62,12 @@ with all_icustay_days as (
 )
 --select * from AgeParams;
 
+
+
+
+
+
+
 , ChartedParams as
   -- Group each c.itemid in meaningful category names
   -- also perform some metric conversion (temperature, etc...)
@@ -74,58 +80,87 @@ with all_icustay_days as (
             when c.itemid in (220045, 211) 
               and c.time between s.begintime and s.endtime then 'HR'
             
-            when c.itemid in (676, 677, 678, 679, 227054, 223762, 223761) 
+            when c.itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762, 227054) 
               and c.time between s.begintime and s.endtime then 'TEMPERATURE'
             
-            when c.itemid in (51, 455, 225309, 2293) 
-              and c.time between s.begintime and s.endtime then 'SYSABP'  -- Invasive/noninvasive BP
+            when c.itemid in (51, 442, 455, 225309, 220179, 220050, 227243, 224167, 6701, 3313) 
+              and c.time between s.begintime and s.endtime then 'SYSABP'  
             
+            when c.itemid in (813, 220545, 226540, 3761)
+              and c.time between s.begintime and s.endtime then 'HCT'
+              
             when c.itemid in (781,225624,1162,3737,227000,5876,227001) 
               and c.time between s.begintime and s.endtime then 'BUN'
             
             when c.itemid in (227013,198,226755)
               and c.time between s.begintime and s.endtime then 'GCS'
             
-            when c.itemid in (220546, 1542, 1127, 861, 4200) 
-              and c.charttime between s.begintime and s.endtime then 'WBC'
+            when c.itemid in (220546, 1542, 1127, 861, 4200)
+              and c.time between s.begintime and s.endtime then 'WBC'
             
-            when c.itemid in (50112,50936,50006) 
-              and c.charttime between s.begintime and s.endtime then 'GLUCOSE'  
+            when c.itemid in (807, 811, 1529, 225664, 220621, 226537, 3745, 3744, 1310, 1455, 2338) 
+              and c.time between s.begintime and s.endtime then 'GLUCOSE'  
             
-            when c.itemid in (50803,50022,50172,50025) 
-              and c.charttime between s.begintime and s.endtime then 'HCO3'
+            when c.itemid in (3808, 3809, 3810, 4199, 223679, 225698, 227443) 
+              and c.time between s.begintime and s.endtime then 'HCO3'
   
-            when c.itemid in (50009,50821,50976,50149)  
-              and c.charttime between s.begintime and s.endtime then 'POTASSIUM'
+            when c.itemid in (829, 1535, 3792, 3725, 4194, 227442, 227464)  
+              and c.time between s.begintime and s.endtime then 'POTASSIUM'
   
-            when c.itemid in (50989,50823,50159,50012) 
-              and c.charttime between s.begintime and s.endtime then 'SODIUM'
+            when c.itemid in (837, 1536, 3726, 3803, 220645, 226534)
+              and c.time between s.begintime and s.endtime then 'SODIUM'
   
-            when c.itemid in (51011,50177) 
-              and c.charttime between s.begintime and s.endtime then 'BUN'
+            when c.itemid in (781, 1162, 3737, 225624) 
+              and c.time between s.begintime and s.endtime then 'BUN'
   
-            when c.itemid in (50090,50916) 
-              and c.charttime between s.begintime and s.endtime then 'CREATININE'
+            when c.itemid in (791, 1525, 3750, 220615) 
+              and c.time between s.begintime and s.endtime then 'CREATININE'
 
           end as category,
           case
-            when c.itemid in (678, 679, 227054, 223761) then (5/9)*(c.value1num-32)
+            when c.itemid in (678, 679, 3652, 227054, 223761) then (5/9)*(c.value1num-32)
             else c.value1num
           end as valuenum
    from all_icustay_days s
    join mimic2v30.chartevents c 
      on s.icustay_id = c.icustay_id
    where c.time between s.begintime and s.endtime
-     and ((c.itemid in (211) and c.value1num between 10 and 250)
-          or (c.itemid in (676, 677, 223762) and c.value1num between 15 and 45)
-          or (c.itemid in (678, 679, 223761, 227054) and (5/9)*(c.value1num-32) between 15 and 45)
-          or (c.itemid in (51,455,225309, 2293) and c.value1num between 20 and 300)
-          or (c.itemid in (781,225624,1162,3737,227000,5876,227001) and c.value1num between 1 and 100)   
-          or (c.itemid in (227013,198,226755) and c.value1num between 2 and 15)
+     and (
+          (c.itemid in (211, 220045) and c.value1num between 10 and 250) --HR
+          or 
+          (c.itemid in (51, 442, 455, 225309, 220179, 220050, 227243, 224167, 6701, 3313) and c.value1num between 20 and 300) -- SYSABP
+          or
+          (c.itemid in (676, 677, 3655, 226329, 223762) and c.value1num between 15 and 45) -- TEMP CELSIUS
+          or 
+          (c.itemid in (678, 679, 3652, 227054, 223761) and (5/9)*(c.value1num-32) between 15 and 45) -- TEMP FARENHEIT
+          or 
+          (c.itemid in (813, 220545, 226540, 3761) and c.value1num between 5 and 100) -- HCT
+          or
+          (c.itemid in (220546, 1542, 1127, 861, 4200) and c.value1num between 0 and 1000000) -- WBC
+          or
+          (c.itemid in (3808, 3809, 3810, 4199, 223679, 225698, 227443) and c.value1num between 2 and 100) --'HCO3'
+          or
+          (c.itemid in (807, 811, 1529, 225664, 220621, 226537, 3745, 3744, 1310, 1455, 2338) and c.value1num between 0.5 and 1000) -- 'GLUCOSE'  
+          or
+          (c.itemid in (829, 1535, 3792, 3725, 4194, 227442, 227464) and c.value1num between 0.5 and 70)-- 'POTASSIUM'
+          or
+          (c.itemid in (837, 1536, 3726, 3803, 220645, 226534) and c.value1num between 50 and 300) -- 'SODIUM'
+          or
+          (c.itemid in (781, 1162, 3737, 225624) and c.value1num between 1 and 100) -- BUN
+          or
+          (c.itemid in (791, 1525, 3750, 220615) and c.value1num between 0 and 30) -- CREATININE
+          or 
+          (c.itemid in (227013,198,226755) and c.value1num between 2 and 15) -- GCS
          )
      and c.value1num is not null
   )
 --select * from ChartedParams;
+
+
+
+
+
+
 
 , LabParams as
   -- Group each c.itemid in meaningful category names
@@ -136,57 +171,68 @@ with all_icustay_days as (
           s.seq,
           s.lod,
           case
-            when c.itemid in (50383,50029)
+            when c.itemid in (50383,51243,50029,50809,50604,50582,50302,50535,50514,50643,51512)
               and c.charttime between s.begintime and s.endtime then 'HCT'
-            when c.itemid in (51326,50468,50316) 
+              
+            when c.itemid in (50468,51327,50674,51550,50527,50314,50314,50316,50617,50599,50548,51326) 
               and c.charttime between s.begintime and s.endtime then 'WBC'
-            when c.itemid in (50112,50936,50006) 
+              
+            when c.itemid in (50112,50936,50006,50641,51510,50201,50240,50043,50217,50208,50266) 
               and c.charttime between s.begintime and s.endtime then 'GLUCOSE'  
-            when c.itemid in (50803,50022,50172,50025) 
+              
+            when c.itemid in (50172,50025,50886,50803,50022,50802,50279,50230) 
               and c.charttime between s.begintime and s.endtime then 'HCO3'
-            when c.itemid in (50009,50821,50976,50149)  
+              
+            when c.itemid in (50149, 50976, 50821, 50275, 50251, 50225, 50048, 50243)  
               and c.charttime between s.begintime and s.endtime then 'POTASSIUM'
-            when c.itemid in (50989,50823,50159,50012) 
+              
+            when c.itemid in (50159, 50989, 50823, 50277, 50252, 50226, 50049, 50244) 
               and c.charttime between s.begintime and s.endtime then 'SODIUM'
-            when c.itemid in (51011,50177) 
+            
+            when c.itemid in (50177,51011,50283,50232,50053) 
               and c.charttime between s.begintime and s.endtime then 'BUN'
-            when c.itemid in (50090,50916) 
+            
+            when c.itemid in (50090,50916,50264,50042,50216,50239,51093)
               and c.charttime between s.begintime and s.endtime then 'CREATININE'
           end as category,
           valuenum
+          
    from all_icustay_days s
    join mimic2v30.labevents c 
      on s.icustay_id = c.icustay_id
    where c.charttime between s.begintime and s.endtime
  
  -- are the units the same
-   and ((c.itemid in (50383,50029) -- 'HCT'
+   and ((c.itemid in (50383,51243,50029,50809,50604,50582,50302,50535,50514,50643,51512) -- 'HCT'
           and c.valuenum between 5 and 100) -- 0 <> 390
  
-        or (c.itemid in (51326,50468,50316) -- 'WBC' up to 100000, check units
-          and c.valuenum*1000 between 5 and 2000000) -- 0 <> 1,250,000
+        or (c.itemid in (50468,51327,50674,51550,50527,50314,50314,50316,50617,50599,50548,51326) -- 'WBC' up to 100000, check units
+          and c.valuenum between 5 and 1000000) -- 0 <> 1,250,000
  
-        or (c.itemid in (50112,50936,50006)-- 'GLUCOSE'  
+        or (c.itemid in (50112,50936,50006,50641,51510,50201,50240,50043,50217,50208,50266) -- 'GLUCOSE'  
           and c.valuenum between 0.5 and 1000) -- -251 <> 3555
  
-        or (c.itemid in (50803,50022,50172,50025)--'HCO3'
+        or (c.itemid in (50172,50025,50886,50803,50022,50802,50279,50230)--'HCO3'
           and c.valuenum between 2 and 100) -- 0 <> 231
  
-        or (c.itemid in (50009,50821,50976,50149)-- 'POTASSIUM'
+        or (c.itemid in (50149, 50976, 50821, 50275, 50251, 50225, 50048, 50243)-- 'POTASSIUM'
           and c.valuenum between 0.5 and 70) -- 0.7	<> 52
  
-        or (c.itemid in (50989,50823,50159,50012)-- 'SODIUM'
+        or (c.itemid in (50159, 50989, 50823, 50277, 50252, 50226, 50049, 50244)-- 'SODIUM'
           and c.valuenum between 50 and 300) -- 1.07 <>	1332
  
-        or (c.itemid in (51011,50177) -- 'BUN'
+        or (c.itemid in (50177,51011,50283,50232,50053) -- 'BUN'
           and c.valuenum between 1 and 100) -- 0 <> 280
         
-        or (c.itemid in (50090,50916) -- 'CREATININE'
+        or (c.itemid in (50090,50916,50264,50042,50216,50239,51093) -- 'CREATININE'
           and c.valuenum between 0 and 30) -- 0	<> 73
      )
      and c.valuenum is not null
   )
 --select * from LabParams;
+
+
+
 
 , UrineParams as
   -- Group each c.itemid in meaningful category names
@@ -204,8 +250,13 @@ with all_icustay_days as (
    join mimic2v30.ioevents c 
     on s.icustay_id=c.icustay_id
    where c.charttime between s.begintime and s.endtime
-     and c.itemid in ( 40056,40057,40058,40070,40086,40095,40097,40097,40406,
-      40429,40474,40535,40652,40716,41923,42367,42508,42511,42677,42811,42860,43054,46181 )
+     and c.itemid in (40056,226559,43176,40070,40095,40066,40062,
+40716,40474,40086,40058,40057,227489,40406,40289,40429,226631,40097,43172,
+43374,40652,40652,45928,44205,43432,43523,42508,44168,42523,43590,42811,
+44758,43538,42043,42677,43967,43463,43655,42120,42363,43381,43366,43366,
+42860,42464,44133,42367,44685,44926,43520,43349,43356,42131,43380,43380,
+45305,45305,41923,44753,40535,43812,43174,43577,43373,43375,43054,44254,
+43634,45842,43334,43857,43348,43988,46181,44707,43639,46178,42069,43813)
      and c.value is not null   
   )
 --select * from UrineParams;
@@ -223,6 +274,11 @@ with all_icustay_days as (
   )
 --select * from daily_urine;
 
+
+
+
+
+
 , VentilatedRespParams as (
   select distinct s.subject_id,
          s.hadm_id,
@@ -230,31 +286,37 @@ with all_icustay_days as (
          s.seq,
          s.lod,
          case
-           when c.itemid in (38,39,40,141,444,535,543,544,545,619,639,654,681,682,
-     683,684,720,721,722,732,1209,1651,1660,1672,1864,1865,2049,2065,2069,
-     2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,5593,20002,224684,
-     224685,224686,224688,224689,224695,224696,224697,227565,227566) then 'VENTILATED_RESP'
-           --when p.starttime between s.begintime and s.endtime then 'VENTILATED_RESP'
+           when c.itemid in (1209,141,14138,1651,1660,1672,1864,1865,20002,2049,
+           2065,2069,224417,224684,224685,224686,224688,224689,224695,224696,224697,
+           227565,227566,2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,38,
+           39,40,444,535,543,544,545,5593,619,639,654,681,682,683,684,720,721,722,732)
+         then 'VENTILATED_RESP'
          end as category,          
-         case
-           when c.itemid in (38,39,40,141,444,535,543,544,545,619,639,654,681,682,
-     683,684,720,721,722,732,1209,1651,1660,1672,1864,1865,2049,2065,2069,
-     2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,5593,20002,224684,
-     224685,224686,224688,224689,224695,224696,224697,227565,227566) then 1 
-     else 0 
-     end as valuenum   -- force invalid number
+        
+        case
+           when c.itemid in (1209,141,14138,1651,1660,1672,1864,1865,20002,2049,
+           2065,2069,224417,224684,224685,224686,224688,224689,224695,224696,224697,
+           227565,227566,2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,38,
+           39,40,444,535,543,544,545,5593,619,639,654,681,682,683,684,720,721,722,732)
+        then 1 else 0 
+        end as valuenum   -- force invalid number
+     
     from all_icustay_days s
     join mimic2v30.chartevents c on s.icustay_id=c.icustay_id
     --join mimic2v30.procedureevents p on s.hadm_id=p.hadm_id
-    where (c.time between s.begintime and s.endtime
-     --and c.itemid in (543, 544, 545, 619, 39, 535, 683, 720, 721, 722, 732)
-     and c.itemid in (38,39,40,141,444,535,543,544,545,619,639,654,681,682,
-     683,684,720,721,722,732,1209,1651,1660,1672,1864,1865,2049,2065,2069,
-     2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,5593,20002,224684,
-     224685,224686,224688,224689,224695,224696,224697,227565,227566))
-    -- or (p.starttime between s.begintime and s.endtime and lower(p.label) like 'Intubation')
+    where (
+      c.time between s.begintime and s.endtime
+      and c.itemid in (1209,141,14138,1651,1660,1672,1864,1865,20002,2049,
+           2065,2069,224417,224684,224685,224686,224688,224689,224695,224696,224697,
+           227565,227566,2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,38,
+           39,40,444,535,543,544,545,5593,619,639,654,681,682,683,684,720,721,722,732))
 )
 --select * from VentilatedRespParams;
+
+
+
+
+
 
 , SpontaneousRespParams as (
   -- Group each c.itemid in meaninful category names
@@ -272,10 +334,15 @@ with all_icustay_days as (
     join mimic2v30.chartevents c 
       on s.icustay_id=c.icustay_id
    where c.time between s.begintime and s.endtime
-     and (c.itemid in (220210,618,653,3603,219,1635,8113,1884,615) and c.value1num between 2 and 80)     
+     and (c.itemid in (219, 618, 614, 619, 615, 220210, 3603, 224689, 224690, 224688) and c.value1num between 2 and 80)     
      and c.value1num is not null
 )
 --select * from SpontaneousRespParams;
+
+
+
+
+
 
 , all_params as
   (select * from AgeParams

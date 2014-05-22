@@ -37,15 +37,16 @@ order by num desc;
 226329	Blood Temperature CCO (C)	60803 
 677	Temperature C (calc)	783760
 3655	Temp Skin [C]	533228
-3652	Temp Axillary [F]	462116
 676	Temperature C	381239
 223762	Temperature Celsius	70207
+227054	TemperatureF_ApacheIV
 223761	Temperature Fahrenheit	500128
+3652	Temp Axillary [F]	462116
 678	Temperature F	785285
 679	Temperature F (calc)	378707
 */
 select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from mimic2v30.chartevents 
-where itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762); 
+where itemid in (676, 677, 678, 679, 3652, 3655, 226329, 223761, 223762, 227054); 
 -- TEMPERATURE: 44837 subjects,	55422	icustays, 71458 max icustay_id
 
 
@@ -380,6 +381,8 @@ select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) f
 
 
 
+
+
 -- SODIUM
 select distinct itemid, label, value1uom,
   count(*) over (partition by itemid) num from mimic2v30.chartevents 
@@ -461,15 +464,23 @@ or
 lower(test_name) like '%blood%urea%nitrogren%' 
 or 
 lower(test_name) like '%nitrogren%' 
+or 
+lower(test_name) like '%urea%n%' 
 order by num desc;
 /*
-NONE
+50177	UREA N	mg/dL	522157
+51011	Urea Nitrogen	mg/dL	258314
+50283	UREA N	mg/dL	7186
+50232	UREA N	mg/dL	63
+50053	UREA N	mg/dL	13
 */
 with subjects as (
   select subject_id, icustay_id from mimic2v30.chartevents where itemid in (781, 1162, 3737, 225624)
+  union
+  select subject_id, icustay_id from mimic2v30.labevents where itemid in (50177,51011,50283,50232,50053)
 )
 select count(distinct subject_id), count(distinct icustay_id), max(icustay_id) from subjects;
- -- 39379	subjects, 50545 icustays, 71458 max icustays
+-- BUN 40678 subjects,	50771 icustays,	71458 max icustay
 
 
 
