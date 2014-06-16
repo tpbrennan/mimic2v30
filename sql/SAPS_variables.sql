@@ -1,5 +1,5 @@
 drop materialized view tbrennan.saps_variables_mimic2v30;
-create materialized view tbrennan.saps_variables_mimic2v30 as
+--create materialized view tbrennan.saps_variables_mimic2v30 as
 
 with all_icustay_days as (
 
@@ -12,41 +12,16 @@ with all_icustay_days as (
           idays.endtime,
           round(extract(hour from idays.endtime - idays.begintime)+ 
             extract(minute from idays.endtime - idays.begintime)/60,2) lod
-   from tbrennan.mimic3_adults icud
+   from tbrennan.mimic3_admits icud
    join mimic2v30.icustay_days idays 
       on icud.icustay_id = idays.icustay_id
-  order by icustay_id
+  order by subject_id,icustay_id,seq
       
 )
---select * from all_icustay_days where lod > 12;
+--select * from all_icustay_days;
 --select count(distinct icustay_id) from all_icustay_days; --50,172 icustays_id
 
-/*
-, pivot_begintime as
-  (select *
-   from (select subject_id, hadm_id, icustay_id, seq, begintime from all_icustay_days) 
-     pivot (min(begintime) for seq in ('1' as begintime))
-  )
---select * from pivot_begintime;
-  
-, pivot_endtime as
-  (select *
-   from (select subject_id, hadm_id, icustay_id, seq, endtime from all_icustay_days) 
-     pivot (min(endtime) for seq in ('1' as endtime))
-  )
---select * from pivot_endtime;
 
-, icustay_days_in_columns as
-  (select b.subject_id,
-          b.hadm_id,
-          b.icustay_id,
-          b.begintime,
-          e.endtime
-   from pivot_begintime b
-   join pivot_endtime e on b.icustay_id=e.icustay_id
-  )
---select * from icustay_days_in_columns;
-*/
 
 , AgeParams as (
    select s.subject_id, 
@@ -155,7 +130,7 @@ with all_icustay_days as (
          )
      and c.value1num is not null
   )
---select * from ChartedParams;
+select * from ChartedParams;
 
 
 

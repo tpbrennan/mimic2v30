@@ -1,5 +1,5 @@
-drop materialized view mimic3_adults;
-create materialized view mimic3_adults as
+drop materialized view mimic3_admits;
+create materialized view mimic3_admits as
 
 with patients as (
   select ie.subject_id, ie.icustay_id, 
@@ -26,7 +26,7 @@ with patients as (
     p.icu_intime,
     p.icu_outtime,
     p.icu_los,
-    round(ad.disch_dt - ad.admit_dt,2) as hosp_los,
+    extract(day from ad.disch_dt - ad.admit_dt)+ round(extract(hour from ad.disch_dt - ad.admit_dt),2) as hosp_los,
     extract(day from ad.admit_dt - p.icu_intime) dt
     from patients p
     join mimic2v30.admissions ad 
@@ -90,7 +90,7 @@ with patients as (
       
 , final_cohort as (
   select * from patient_info
-    where age_admit > 15
+    --where age_admit > 15
 )
-select * from final_cohort;
+select * from final_cohort order by subject_id;
 
