@@ -165,4 +165,4 @@ group by itemid;
 
 select count(distinct subject_id) from mimic2v30.chartevents 
 where itemid in (618, 614, 615, 653,1884, 220210, 3603, 224689, 224690);
--- subjects
+-- 46,769 subjects
