@@ -1,95 +1,200 @@
 drop materialized view tbrennan.saps_labvars_mimic2v30;
---create materialized view tbrennan.saps_labvars_mimic2v30 as
-
-with all_icustay_days as (
-
-  select icud.subject_id,
-          icud.hadm_id,
-          icud.icustay_id,
-          icud.icu_los,
-          idays.seq,
-          idays.begintime,
-          idays.endtime,
-          round(extract(hour from idays.endtime - idays.begintime)+ 
-            extract(minute from idays.endtime - idays.begintime)/60,2) lod
-   from tbrennan.mimic3_admits icud
-   join mimic2v30.icustay_days idays 
-      on icud.icustay_id = idays.icustay_id
-  order by subject_id,icustay_id,seq
-      
-)
---select * from all_icustay_days;
---select count(distinct icustay_id) from all_icustay_days; --50,172 icustays_id
+create materialized view tbrennan.saps_labvars_mimic2v30 as
 
 
-, LabParams as
-  -- Group each c.itemid in meaningful category names
-  -- also perform some metric conversion (temperature, etc...)
-  (select s.subject_id, 
+with hct as (
+
+select s.subject_id, 
           s.hadm_id,
           s.icustay_id,
           s.seq,
           s.lod,
-          case
-            when c.itemid in (51243,50809)
-              and c.charttime between s.begintime and s.endtime then 'HCT'
-              
-            when c.itemid in (51327,51326)
-              and c.charttime between s.begintime and s.endtime then 'WBC'
-              
-            when c.itemid in (50936)
-              and c.charttime between s.begintime and s.endtime then 'GLUCOSE'  
-              
-            when c.itemid in (50886,50803,50802) 
-              and c.charttime between s.begintime and s.endtime then 'HCO3'
-              
-            when c.itemid in  (50976,50821) 
-              and c.charttime between s.begintime and s.endtime then 'POTASSIUM'
-              
-            when c.itemid in (50989,50823) 
-              and c.charttime between s.begintime and s.endtime then 'SODIUM'
-            
-            when c.itemid in (51011) 
-              and c.charttime between s.begintime and s.endtime then 'BUN'
-            
-            when c.itemid in (50916)
-              and c.charttime between s.begintime and s.endtime then 'CREATININE'
+          case when c.itemid in (51243,50809)
+              and c.charttime between s.begintime and s.endtime then 'HCT' 
           end as category,
-          value
-          
-   from all_icustay_days s
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
    join mimic2v30.labevents c on s.subject_id = c.subject_id
    where c.charttime between s.begintime and s.endtime
- 
-   and ((c.itemid in (51243,50809) -- 'HCT'
-          and c.value between 5 and 100) -- 0 <> 390
- 
-        or (c.itemid in  (51327,51326) -- 'WBC' 
-          and c.value between 5 and 1000000) -- 0 <> 1,250,000
- 
-        or (c.itemid in (50936) -- 'GLUCOSE'  
-          and c.value between 0.5 and 1000) -- -251 <> 3555
- 
-        or (c.itemid in (50886,50803,50802)--'HCO3'
-          and c.value between 2 and 100) -- 0 <> 231
- 
-        or (c.itemid in (50976,50821) -- 'POTASSIUM'
-          and c.value between 0.5 and 70) -- 0.7	<> 52
- 
-        or (c.itemid in (50989,50823)-- 'SODIUM'
-          and c.value between 50 and 300) -- 1.07 <>	1332
- 
-        or (c.itemid in (51011) -- 'BUN'
-          and c.value between 1 and 100) -- 0 <> 280
-        
-        or (c.itemid in (50916) -- 'CREATININE'
-          and c.value between 0 and 30) -- 0	<> 73
-     )
-     and c.value is not null
-  )
---select * from LabParams;
+   and c.itemid in (51243,50809)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
 
-, all_params as
-  (select * from LabParams )
-select * from all_params;
+)
+--select * from hct;
+          
+, wbc as (
+
+select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          s.lod,
+          case when c.itemid in (51327,51326)
+              and c.charttime between s.begintime and s.endtime then 'WBC' 
+          end as category,
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
+   join mimic2v30.labevents c on s.subject_id = c.subject_id
+   where c.charttime between s.begintime and s.endtime
+   and c.itemid in (51327,51326)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
+
+)
+--select * from wbc;        
+              
+
+, glucose as (
+select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          s.lod,
+          case when c.itemid in (50936)
+              and c.charttime between s.begintime and s.endtime then 'GLUCOSE' 
+          end as category,
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
+   join mimic2v30.labevents c on s.subject_id = c.subject_id
+   where c.charttime between s.begintime and s.endtime
+   and c.itemid in (50936)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
+
+)
+--select * from glucose; 
+
+, hco3 as (
+select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          s.lod,
+          case when c.itemid in (50886,50803,50802)
+              and c.charttime between s.begintime and s.endtime then 'HCO3' 
+          end as category,
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
+   join mimic2v30.labevents c on s.subject_id = c.subject_id
+   where c.charttime between s.begintime and s.endtime
+   and c.itemid in (50886,50803,50802)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
+
+)
+--select * from hco3;
+
+, potassium as (
+select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          s.lod,
+          case when c.itemid in (50976,50821)
+              and c.charttime between s.begintime and s.endtime then 'POTASSIUM' 
+          end as category,
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
+   join mimic2v30.labevents c on s.subject_id = c.subject_id
+   where c.charttime between s.begintime and s.endtime
+   and c.itemid in (50976,50821)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
+)
+--select * from potassium;
+  
+
+, sodium as (
+select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          s.lod,
+          case when c.itemid in (50989,50823)
+              and c.charttime between s.begintime and s.endtime then 'SODIUM' 
+          end as category,
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
+   join mimic2v30.labevents c on s.subject_id = c.subject_id
+   where c.charttime between s.begintime and s.endtime
+   and c.itemid in (50989,50823)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
+   
+)
+--select * from sodium;
+  
+  
+, bun as (
+select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          s.lod,
+          case when c.itemid in (51011)
+              and c.charttime between s.begintime and s.endtime then 'BUN' 
+          end as category,
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
+   join mimic2v30.labevents c on s.subject_id = c.subject_id
+   where c.charttime between s.begintime and s.endtime
+   and c.itemid in (51011)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
+   
+)
+--select * from bun;
+
+, creatinine as (
+select s.subject_id, 
+          s.hadm_id,
+          s.icustay_id,
+          s.seq,
+          s.lod,
+          case when c.itemid in (50916)
+              and c.charttime between s.begintime and s.endtime then 'CREATININE' 
+          end as category,
+          to_number(value) valuenum
+   from tbrennan.mimic2v30_days s
+   join mimic2v30.labevents c on s.subject_id = c.subject_id
+   where c.charttime between s.begintime and s.endtime
+   and c.itemid in (50916)
+   and c.value is not null
+   and length(trim(translate(c.value,' -.0123456789',' '))) is null
+   
+)
+--select * from creatinine;
+
+           
+, assemble as (
+    select * from hct
+    union
+    select * from wbc
+    union
+    select * from glucose
+    union
+    select * from hco3
+    union 
+    select * from potassium
+    union 
+    select * from potassium
+)
+select * from assemble
+where 
+  (category = 'HCT' and valuenum between 5 and 100)
+  or
+  (category = 'WBC' and valuenum between 5 and 1000000)
+  or
+  (category = 'GLUCOSE' and valuenum between 0.5 and 1000)
+  or
+  (category = 'HCO3' and valuenum  between 2 and 100)
+  or 
+  (category = 'POTASSIUM' and valuenum  between 0.5 and 70)
+  or
+  (category = 'SODIUM' and valuenum between 50 and 300) 
+  or 
+  (category = 'BUN' and valuenum between 1 and 100) 
+  or 
+  (category = 'CREATININE' and valuenum between 0 and 30);
 

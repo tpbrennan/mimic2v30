@@ -1,5 +1,5 @@
 drop materialized view tbrennan.saps_chartvars_mimic2v30;
---create materialized view tbrennan.saps_chartvars_mimic2v30 as
+create materialized view tbrennan.saps_chartvars_mimic2v30 as
 
 with all_icustay_days as (
 
