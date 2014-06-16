@@ -180,7 +180,7 @@ select s.subject_id,
     union 
     select * from potassium
 )
-select * from assemble
+select * from assemble;
 where 
   (category = 'HCT' and valuenum between 5 and 100)
   or
