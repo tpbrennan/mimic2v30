@@ -13,7 +13,7 @@ select itemid,count(*)
 */
 select count(distinct subject_id) from mimic2v30.chartevents c 
   where itemid in (220045, 211);
---
+-- 46804 subjects
 
 
 -- TEMPARATURE
@@ -80,7 +80,89 @@ select count(distinct subject_id) from mimic2v30.chartevents c
 -- 23614 subjects
 
 
+-- VENTILATED
+select * from mimic2v30.d_items 
+where itemid in (1209,141,14138,1651,1660,1672,1864,1865,2049,
+           2065,2069,224417,224684,224685,224686,224688,224695,224696,224697,
+           227565,227566,2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,38,
+           39,40,444,535,543,544,545,5593,619,639,654,681,682,683,684,720,721,722,732);
+select itemid,count(*) no from mimic2v30.chartevents
+  where itemid in (1209,141,14138,1651,1660,1672,1864,1865,2049,
+           2065,2069,224417,224684,224685,224686,224688,224695,224696,224697,
+           227565,227566,2400,2402,2420,2534,2988,3003,3050,3083,3605,3681,3689,38,
+           39,40,444,535,543,544,545,5593,619,639,654,681,682,683,684,720,721,722,732)
+  group by itemid
+  order by no desc;
+/*
+40	514690
+722	493412
+39	493101
+720	425004
+224697	391088
+444	386460
+224685	383104
+38	379012
+224695	378947
+619	254701
+682	252045
+535	238583
+683	233230
+732	223955
+224686	220999
+684	198718
+224688	194280
+224684	185373
+543	177372
+545	99835
+721	80536
+227565	77727
+227566	77683
+224696	69967
+3681	48529
+224417	38603
+3605	34359
+3689	31674
+141	18449
+*/
+select count(distinct subject_id) from mimic2v30.chartevents 
+where itemid in (40,722,39,720,224697,444,224685,38,224695,
+619,682,535,683,732,224686,684,224688,224684,543,
+545,721,227565,227566,224696,681,224417,605,3689,141);
+-- 24,618 subjects
 
---HCT
-select * from mimic2v30.d_items where itemid in (50383,51243,50029,50809);
 
+
+-- RESPIRATION RATE
+select * from mimic2v30.d_items 
+where itemid in (618, 614, 615, 653,1884, 220210, 3603, 224689, 224690);
+/*
+614	Resp Rate (Spont)
+615	Resp Rate (Total)
+618	Respiratory Rate
+653	Spont. Resp. Rate
+1884	Spont Resp rate
+3603	Resp Rate
+220210	Respiratory Rate
+224689	Respiratory Rate (spontaneous)
+224690	Respiratory Rate (Total)
+*/
+select * from mimic2v30.d_items where lower(label) like '%resp%rate%';
+
+select itemid,count(*) no from mimic2v30.chartevents
+where itemid in (618, 614, 615, 653,1884, 220210, 3603, 224689, 224690)
+group by itemid;
+/*
+614	239893
+615	421300
+618	3433853
+653	143
+1884	23
+3603	1677429
+220210	2555576
+224689	378496
+224690	327087
+*/
+
+select count(distinct subject_id) from mimic2v30.chartevents 
+where itemid in (618, 614, 615, 653,1884, 220210, 3603, 224689, 224690);
+-- subjects
