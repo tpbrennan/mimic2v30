@@ -1,7 +1,6 @@
 drop materialized view tbrennan.saps_labvars_mimic2v30;
 --create materialized view tbrennan.saps_labvars_mimic2v30 as
 
-
 with hct as (
 
 select s.subject_id, 
@@ -74,14 +73,14 @@ select s.subject_id,
           case when c.itemid in (50886,50803,50802)
               and c.charttime between s.begintime and s.endtime then 'HCO3' 
           end as category,
-          to_number(value) valuenum
+          --to_number(c.value) valuenum,
+          COALESCE(TO_NUMBER(REGEXP_SUBSTR(c.value, '^\d+(\.\d+)?')), 0) valuenum
    from tbrennan.mimic2v30_days s
    join mimic2v30.labevents c on s.subject_id = c.subject_id
    where c.charttime between s.begintime and s.endtime
    and c.itemid in (50886,50803,50802)
    and c.value is not null
    and length(trim(translate(c.value,' -.0123456789',' '))) is null
-
 )
 --select * from hco3;
 
@@ -114,7 +113,8 @@ select s.subject_id,
           case when c.itemid in (50989,50823)
               and c.charttime between s.begintime and s.endtime then 'SODIUM' 
           end as category,
-          to_number(value) valuenum
+          --to_number(value) valuenum
+          COALESCE(TO_NUMBER(REGEXP_SUBSTR(c.value, '^\d+(\.\d+)?')), 0) valuenum
    from tbrennan.mimic2v30_days s
    join mimic2v30.labevents c on s.subject_id = c.subject_id
    where c.charttime between s.begintime and s.endtime
@@ -123,7 +123,7 @@ select s.subject_id,
    and length(trim(translate(c.value,' -.0123456789',' '))) is null
    
 )
---select * from sodium;
+--select * from sodium where valuenum > 0;
   
   
 , bun as (
@@ -168,37 +168,20 @@ select s.subject_id,
 
            
 , assemble as (
-    select * from hct
+    select * from hct where valuenum between 5 and 100
     union
-    select * from wbc
+    select * from wbc where valuenum between 5 and 1000000
     union
-    select * from glucose
+    select * from glucose where valuenum between 0.5 and 1000
     union
-    select * from hco3
+    select * from hco3 where valuenum between 2 and 100
     union 
-    select * from potassium
+    select * from potassium where valuenum  between 0.5 and 70
     union 
-    select * from sodium
+    select * from sodium where valuenum between 50 and 300
     union 
-    select * from bun
+    select * from bun where valuenum between 1 and 100
     union 
-    select * from creatinine
+    select * from creatinine where valuenum between 0 and 30
 )
 select * from assemble;
-where 
-  (category = 'HCT' and valuenum between 5 and 100)
-  or
-  (category = 'WBC' and valuenum between 5 and 1000000)
-  or
-  (category = 'GLUCOSE' and valuenum between 0.5 and 1000)
-  or
-  (category = 'HCO3' and valuenum  between 2 and 100)
-  or 
-  (category = 'POTASSIUM' and valuenum  between 0.5 and 70)
-  or
-  (category = 'SODIUM' and valuenum between 50 and 300) 
-  or 
-  (category = 'BUN' and valuenum between 1 and 100) 
-  or 
-  (category = 'CREATININE' and valuenum between 0 and 30);
-
