@@ -89,7 +89,7 @@ BEGIN
 
         IF p_val = 1 THEN
             retValue := 3;
-        ELSIF p_val = 0 THEN
+        ELSE 
             retValue := 0;
         END IF;
         
@@ -241,7 +241,7 @@ BEGIN
             retValue := 2;
         ELSIF p_val < 13 THEN
             retValue := 1;
-        ELSIF p_val >= 13 THEN
+        ELSE 
             retValue := 0;
         END IF;
 

@@ -38,6 +38,14 @@ select * from mimic2v30.d_items where itemid in
 (50886,50803,50802);
 select * from mimic2v30.d_items where (lower(label) like '%bicarbonate%' or lower(label) like '%total co2%')
   and origin ='LAB' and type = 'BLOOD';
+select itemid, count(*) from mimic2v30.labevents
+  where itemid in (50886,50803,50802)
+  group by itemid;
+/*
+50802	7816
+50803	463499
+50886	587531
+*/
 select count(distinct subject_id) from mimic2v30.labevents c 
   where itemid in (50886,50803,50802);
 -- 40,922 subjects
