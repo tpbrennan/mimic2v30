@@ -1,29 +1,7 @@
 drop materialized view tbrennan.saps_chartvars_mimic2v30;
---create materialized view tbrennan.saps_chartvars_mimic2v30 as
+create materialized view tbrennan.saps_chartvars_mimic2v30 as
 
-with all_icustay_days as (
-
-  select icud.subject_id,
-          icud.hadm_id,
-          icud.icustay_id,
-          icud.icu_los,
-          idays.seq,
-          idays.begintime,
-          idays.endtime,
-          round(extract(hour from idays.endtime - idays.begintime)+ 
-            extract(minute from idays.endtime - idays.begintime)/60,2) lod
-   from tbrennan.mimic3_admits icud
-   join mimic2v30.icustay_days idays 
-      on icud.icustay_id = idays.icustay_id
-  order by subject_id,icustay_id,seq
-      
-)
---select * from all_icustay_days;
---select count(distinct icustay_id) from all_icustay_days; --50,172 icustays_id
-
-
-
-, AgeParams as (
+with AgeParams as (
    select s.subject_id, 
           s.hadm_id,
           s.icustay_id,
@@ -31,9 +9,10 @@ with all_icustay_days as (
           s.lod,
           'AGE' as category,
           d.age_admit valuenum
-    from all_icustay_days s
-    join tbrennan.mimic3_adults d
-      on s.icustay_id = d.icustay_id
+    from tbrennan.mimic2v30_days s
+    join tbrennan.mimic2v30_admits d
+      on s.subject_id = d.subject_id
+     and s.icustay_id = d.icustay_id
 )
 --select * from AgeParams;
 
@@ -69,7 +48,7 @@ with all_icustay_days as (
             when c.itemid in (678, 679, 3652, 227054, 223761) then (5/9)*(c.value1num-32)
             else c.value1num
           end as valuenum
-   from all_icustay_days s
+   from tbrennan.mimic2v30_days s
    join mimic2v30.chartevents c 
      on s.icustay_id = c.icustay_id
    where c.time between s.begintime and s.endtime
@@ -104,7 +83,7 @@ with all_icustay_days as (
             when c.charttime between s.begintime and s.endtime then 'URINE'
            end as category,
           c.value volume
-   from all_icustay_days s
+   from tbrennan.mimic2v30_days s
    join mimic2v30.ioevents c 
     on s.icustay_id=c.icustay_id
    where c.charttime between s.begintime and s.endtime
@@ -159,7 +138,7 @@ with all_icustay_days as (
         then 1 else 0 
         end as valuenum   -- force invalid number
      
-    from all_icustay_days s
+    from tbrennan.mimic2v30_days s
     join mimic2v30.chartevents c on s.icustay_id=c.icustay_id
     where (
       c.time between s.begintime and s.endtime
@@ -187,7 +166,7 @@ with all_icustay_days as (
            when c.time between s.begintime and s.endtime then 'SPONTANEOUS_RESP'
          end as category,         
          c.value1num as valuenum
-    from all_icustay_days s
+    from tbrennan.mimic2v30_days s
     join mimic2v30.chartevents c 
       on s.icustay_id=c.icustay_id
    where c.time between s.begintime and s.endtime

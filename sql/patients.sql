@@ -1,5 +1,5 @@
-drop materialized view mimic3_admits;
-create materialized view mimic3_admits as
+drop materialized view mimic2v30_admits;
+create materialized view mimic2v30_admits as
 
 with patients as (
   select ie.subject_id, ie.icustay_id, 
@@ -66,6 +66,8 @@ with patients as (
       ad.hadm_id,
       ad.icustay_id,
       pi.sex,
+      pi.dob,
+      pi.dod,
       case 
         when round((cast(ad.icu_intime as date) - pi.dob)/365,2) > 90 then 91.4
         else round((cast(ad.icu_intime as date) - pi.dob)/365,2)
@@ -75,8 +77,6 @@ with patients as (
       ad.icu_los,
       ad.hosp_los,
       ad.careunit,
-      pi.dob,
-      pi.dod,
       case 
         when (pi.dod > cast(ad.icu_intime as date) and pi.dod < cast(ad.icu_outtime as date)) 
         then 'Y' else 'N'

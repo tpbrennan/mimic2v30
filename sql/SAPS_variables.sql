@@ -1,5 +1,5 @@
-drop materialized view tbrennan.saps_variables_mimic2v30;
-create materialized view tbrennan.saps_variables_mimic2v30 as
+drop materialized view tbrennan.mimic2v30_saps_variables;
+create materialized view tbrennan.mimic2v30_saps_variables as
 
 with saps_variables as (
   select * from tbrennan.saps_labvars_mimic2v30
