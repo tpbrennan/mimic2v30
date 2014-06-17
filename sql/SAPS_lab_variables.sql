@@ -1,5 +1,5 @@
 drop materialized view tbrennan.saps_labvars_mimic2v30;
-create materialized view tbrennan.saps_labvars_mimic2v30 as
+--create materialized view tbrennan.saps_labvars_mimic2v30 as
 
 
 with hct as (
@@ -178,7 +178,11 @@ select s.subject_id,
     union 
     select * from potassium
     union 
-    select * from potassium
+    select * from sodium
+    union 
+    select * from bun
+    union 
+    select * from creatinine
 )
 select * from assemble;
 where 
