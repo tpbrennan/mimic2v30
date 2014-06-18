@@ -1,7 +1,5 @@
 drop materialized view tbrennan.mimic2v30_raw_sapsi;
-create materialized view tbrennan.mimic2v30_raw_sapsi as 
-
-create materialized view tbrennan.mimic2v30_raw_sapsi as 
+--create materialized view tbrennan.mimic2v30_raw_sapsi as 
 
 with SummaryValues as (
   -- find the min and max values for each category and calc_dt
@@ -16,7 +14,7 @@ with SummaryValues as (
    from tbrennan.mimic2v30_saps_variables
    where lod > 12
 )
---select * from SummaryValues;
+--select * from SummaryValues where subject_id > 38000;
 --select count(distinct icustay_id) from SummaryValues; --50,172 icustay_id
 
 , CalcSapsParams as (
@@ -109,7 +107,7 @@ with SummaryValues as (
     where d.param_score is not null
       order by d.subject_id
 )
---select * from calc_saps_score; --
+select count(distinct subject_id) from calc_saps_score where subject_id > 38000; --
 
 , final_sapsi as (
   select distinct subject_id,

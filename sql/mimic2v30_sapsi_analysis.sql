@@ -10,7 +10,7 @@ with compare_sapsi as (
      and fs.hadm_id = id.hadm_id
      order by fs.subject_id
 )
---select * from compare_sapsi;
+select * from compare_sapsi where subject_id > 38000;
 
 , mortality as (
   select cs.*,
