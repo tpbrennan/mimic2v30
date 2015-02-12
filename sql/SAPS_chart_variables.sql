@@ -45,7 +45,7 @@ with AgeParams as (
 
           end as category,
           case
-            when c.itemid in (678, 679, 3652, 227054, 223761) then (5/9)*(c.value1num-32)
+            when c.itemid in (678, 679, 3652, 227054, 223761) then (5/9)*(c.value1num-32) -- conversion from F to C
             else c.value1num
           end as valuenum
    from tbrennan.mimic2v30_days s
