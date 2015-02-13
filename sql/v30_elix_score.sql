@@ -67,65 +67,70 @@ WITH
   )
 
 select * from raw_elix order by 1,2;
-  ,
-  elix_weights AS
+  
+ with elix_weights AS
   (
     SELECT
       subject_id,
       hadm_id,
       -- points for in-hospital mortality
-      CONGESTIVE_HEART_FAILURE*(4) + CARDIAC_ARRHYTHMIAS*(4) + VALVULAR_DISEASE
-                              *(-3) + PULMONARY_CIRCULATION*(0) +
-      PERIPHERAL_VASCULAR     *(0) + HYPERTENSION*(-1) + PARALYSIS*(0) +
-      OTHER_NEUROLOGICAL      *(7) + CHRONIC_PULMONARY*(0) +
-      DIABETES_UNCOMPLICATED  *(-1) + DIABETES_COMPLICATED*(-4) +
-      HYPOTHYROIDISM          *(0) + RENAL_FAILURE*(3) + LIVER_DISEASE*(4) +
-      PEPTIC_ULCER            *(-9) + AIDS*(0) + LYMPHOMA*(7) +
-      METASTATIC_CANCER       *(9) + SOLID_TUMOR*(0) + RHEUMATOID_ARTHRITIS*(0)
-                              + COAGULOPATHY*(3) + OBESITY*(-5) + WEIGHT_LOSS*(
-      4)                      + FLUID_ELECTROLYTE*(6) + BLOOD_LOSS_ANEMIA*(0) +
-      DEFICIENCY_ANEMIAS      *(-4) + ALCOHOL_ABUSE*(0) + DRUG_ABUSE*(-6) +
-      PSYCHOSES               *(-5) + DEPRESSION*(-8) AS hospital_mort_pt,
+      CONGESTIVE_HEART_FAILURE*(4) + CARDIAC_ARRHYTHMIAS*(3) 
+      + VALVULAR_DISEASE*(-1) + PULMONARY_CIRCULATION*(0) +
+      PERIPHERAL_VASCULAR     *(1) + HYPERTENSION*(0) + PARALYSIS*(2) +
+      OTHER_NEUROLOGICAL      *(4) + CHRONIC_PULMONARY*(1) +
+      DIABETES_UNCOMPLICATED  *(0) + DIABETES_COMPLICATED*(-1) +
+      HYPOTHYROIDISM          *(0) + RENAL_FAILURE*(5) + LIVER_DISEASE*(5) +
+      PEPTIC_ULCER            *(0) + AIDS*(0) + LYMPHOMA*(6) +
+      METASTATIC_CANCER       *(7) + SOLID_TUMOR*(1) + RHEUMATOID_ARTHRITIS*(0)
+                              + COAGULOPATHY*(3) + OBESITY*(-5) + WEIGHT_LOSS*(3)
+                              + FLUID_ELECTROLYTE*(6) + BLOOD_LOSS_ANEMIA*(0) +
+      DEFICIENCY_ANEMIAS      *(-2) + ALCOHOL_ABUSE*(0) + DRUG_ABUSE*(-5) +
+      PSYCHOSES               *(-4) + DEPRESSION*(-5) AS hospital_mort_pt,
+      
+      
       -- points for 28 day mortality
-      CONGESTIVE_HEART_FAILURE*(5) + CARDIAC_ARRHYTHMIAS*(4) + VALVULAR_DISEASE
-                              *(-1) + PULMONARY_CIRCULATION*(0) +
-      PERIPHERAL_VASCULAR     *(0) + HYPERTENSION*(-1) + PARALYSIS*(0) +
-      OTHER_NEUROLOGICAL      *(6) + CHRONIC_PULMONARY*(0) +
-      DIABETES_UNCOMPLICATED  *(0) + DIABETES_COMPLICATED*(-3) + HYPOTHYROIDISM
-                              *(0) + RENAL_FAILURE*(4) + LIVER_DISEASE*(4) +
+      CONGESTIVE_HEART_FAILURE*(5) + CARDIAC_ARRHYTHMIAS*(5) + VALVULAR_DISEASE
+                              *(-2) + PULMONARY_CIRCULATION*(0) +
+      PERIPHERAL_VASCULAR     *(0) + HYPERTENSION*(0) + PARALYSIS*(5) +
+      OTHER_NEUROLOGICAL      *(8) + CHRONIC_PULMONARY*(2) +
+      DIABETES_UNCOMPLICATED  *(1) + DIABETES_COMPLICATED*(-3) + HYPOTHYROIDISM
+                              *(0) + RENAL_FAILURE*(4) + LIVER_DISEASE*(6) +
       PEPTIC_ULCER            *(0) + AIDS*(0) + LYMPHOMA*(5) +
-      METASTATIC_CANCER       *(12) + SOLID_TUMOR*(1) + RHEUMATOID_ARTHRITIS*(0
-      )                       + COAGULOPATHY*(3) + OBESITY*(-6) + WEIGHT_LOSS*(
-      6)                      + FLUID_ELECTROLYTE*(6) + BLOOD_LOSS_ANEMIA*(0) +
-      DEFICIENCY_ANEMIAS      *(-3) + ALCOHOL_ABUSE*(-2) + DRUG_ABUSE*(-6) +
-      PSYCHOSES               *(-4) + DEPRESSION*(-6) AS
-      twenty_eight_day_mort_pt,
+      METASTATIC_CANCER       *(14) + SOLID_TUMOR*(2) + RHEUMATOID_ARTHRITIS*(0
+      )                       + COAGULOPATHY*(3) + OBESITY*(-8) + WEIGHT_LOSS*(
+      2)                      + FLUID_ELECTROLYTE*(9) + BLOOD_LOSS_ANEMIA*(0) +
+      DEFICIENCY_ANEMIAS      *(-3) + ALCOHOL_ABUSE*(0) + DRUG_ABUSE*(-7) +
+      PSYCHOSES               *(-6) + DEPRESSION*(-6) AS
+      twenty_eight_day_mort_pt
+      
       -- points for 1 year mortality
-      CONGESTIVE_HEART_FAILURE*(5) + CARDIAC_ARRHYTHMIAS*(4) + VALVULAR_DISEASE
-                              *(0) + PULMONARY_CIRCULATION*(0) +
-      PERIPHERAL_VASCULAR     *(0) + HYPERTENSION*(-1) + PARALYSIS*(3) +
-      OTHER_NEUROLOGICAL      *(4) + CHRONIC_PULMONARY*(2) +
-      DIABETES_UNCOMPLICATED  *(0) + DIABETES_COMPLICATED*(0) + HYPOTHYROIDISM*
-      (0)                     + RENAL_FAILURE*(5) + LIVER_DISEASE*(4) +
-      PEPTIC_ULCER            *(0) + AIDS*(3) + LYMPHOMA*(6) +
-      METASTATIC_CANCER       *(14) + SOLID_TUMOR*(3) + RHEUMATOID_ARTHRITIS*(0
-      )                       + COAGULOPATHY*(3) + OBESITY*(-5) + WEIGHT_LOSS*(
-      5)                      + FLUID_ELECTROLYTE*(4) + BLOOD_LOSS_ANEMIA*(0) +
-      DEFICIENCY_ANEMIAS      *(-1) + ALCOHOL_ABUSE*(-3) + DRUG_ABUSE*(-3) +
-      PSYCHOSES               *(-3) + DEPRESSION*(-2) AS one_yr_mort_pt,
+      ,CONGESTIVE_HEART_FAILURE*(14) + CARDIAC_ARRHYTHMIAS*(10) + VALVULAR_DISEASE
+                              *(-3) + PULMONARY_CIRCULATION*(0) +
+      PERIPHERAL_VASCULAR     *(3) + HYPERTENSION*(-1) + PARALYSIS*(9) +
+      OTHER_NEUROLOGICAL      *(10) + CHRONIC_PULMONARY*(7) +
+      DIABETES_UNCOMPLICATED  *(2) + DIABETES_COMPLICATED*(-2) + HYPOTHYROIDISM*
+      (3)                     + RENAL_FAILURE*(14) + LIVER_DISEASE*(12) +
+      PEPTIC_ULCER            *(0) + AIDS*(7) + LYMPHOMA*(14) +
+      METASTATIC_CANCER       *(34) + SOLID_TUMOR*(9) + RHEUMATOID_ARTHRITIS*(0
+      )                       + COAGULOPATHY*(8) + OBESITY*(-15) + WEIGHT_LOSS*(
+      11)                      + FLUID_ELECTROLYTE*(13) + BLOOD_LOSS_ANEMIA*(0) +
+      DEFICIENCY_ANEMIAS      *(-2) + ALCOHOL_ABUSE*(-5) + DRUG_ABUSE*(-9) +
+      PSYCHOSES               *(-7) + DEPRESSION*(-5) AS one_yr_mort_pt,
+      
       -- points for 2 year mortality
-      CONGESTIVE_HEART_FAILURE*(10) + CARDIAC_ARRHYTHMIAS*(7) +
-      VALVULAR_DISEASE        *(0) + PULMONARY_CIRCULATION*(0) +
-      PERIPHERAL_VASCULAR     *(2) + HYPERTENSION*(-2) + PARALYSIS*(7) +
-      OTHER_NEUROLOGICAL      *(9) + CHRONIC_PULMONARY*(6) +
-      DIABETES_UNCOMPLICATED  *(1) + DIABETES_COMPLICATED*(0) + HYPOTHYROIDISM*
-      (1)                     + RENAL_FAILURE*(13) + LIVER_DISEASE*(8) +
-      PEPTIC_ULCER            *(0) + AIDS*(8) + LYMPHOMA*(12) +
-      METASTATIC_CANCER       *(31) + SOLID_TUMOR*(7) + RHEUMATOID_ARTHRITIS*(0
-      )                       + COAGULOPATHY*(5) + OBESITY*(-11) + WEIGHT_LOSS*
-      (10)                    + FLUID_ELECTROLYTE*(9) + BLOOD_LOSS_ANEMIA*(0) +
-      DEFICIENCY_ANEMIAS      *(0) + ALCOHOL_ABUSE*(-5) + DRUG_ABUSE*(-6) +
-      PSYCHOSES               *(-3) + DEPRESSION*(-5) AS two_yr_mort_pt,
+      CONGESTIVE_HEART_FAILURE*(15) + CARDIAC_ARRHYTHMIAS*(10) +
+      VALVULAR_DISEASE        *(-3) + PULMONARY_CIRCULATION*(0) +
+      PERIPHERAL_VASCULAR     *(4) + HYPERTENSION*(-1) + PARALYSIS*(9) +
+      OTHER_NEUROLOGICAL      *(10) + CHRONIC_PULMONARY*(8) +
+      DIABETES_UNCOMPLICATED  *(3) + DIABETES_COMPLICATED*(0) + HYPOTHYROIDISM*
+      (4)                     + RENAL_FAILURE*(16) + LIVER_DISEASE*(12) +
+      PEPTIC_ULCER            *(-4) + AIDS*(9) + LYMPHOMA*(16) +
+      METASTATIC_CANCER       *(36) + SOLID_TUMOR*(11) + RHEUMATOID_ARTHRITIS*(0
+      )                       + COAGULOPATHY*(8) + OBESITY*(-16) + WEIGHT_LOSS*
+      (11)                    + FLUID_ELECTROLYTE*(12) + BLOOD_LOSS_ANEMIA*(0) +
+      DEFICIENCY_ANEMIAS      *(0) + ALCOHOL_ABUSE*(-4) + DRUG_ABUSE*(-9) +
+      PSYCHOSES               *(-4) + DEPRESSION*(-5) AS two_yr_mort_pt,
+      
       -- points for 1 year survival
       CONGESTIVE_HEART_FAILURE*(4) + CARDIAC_ARRHYTHMIAS*(3) + VALVULAR_DISEASE
                               *(0) + PULMONARY_CIRCULATION*(0) +
@@ -153,7 +158,7 @@ select * from raw_elix order by 1,2;
       DEFICIENCY_ANEMIAS      *(-1) + ALCOHOL_ABUSE*(-4) + DRUG_ABUSE*(-5) +
       PSYCHOSES               *(-3) + DEPRESSION*(-4) AS two_year_survival_pt
     FROM
-      raw_elix
+      v30_elix_raw_data
     ORDER BY
       1,2
   )
