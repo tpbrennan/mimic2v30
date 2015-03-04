@@ -14,7 +14,7 @@
  parameters for each 24hr of each ICUStay for adult patients.
 
 */
-create materialized view sapsi_icustays as
+--create materialized view sapsi_icustays as
 WITH icustays as (
   select distinct dp.subject_id, icue.icustay_id, dob, intime,-- outtime,
          round(extract (day from intime - dob)/365,3) as age,
@@ -29,18 +29,16 @@ WITH icustays as (
     
 )
 
-select * from icustays;
+--select * from icustays;
 --select count(distinct icustay_id) from icustays; -- 52524
 
 
---------------------------------------------------------------------------------------------------
-with icustays as
-(select *
-from sapsi_icustays
-)
-;
+/**************************************************************************************************/
+/***************   Parameters from chartevents     ********************/
+/**************************************************************************************************/
 
- ChartedParams1 as
+
+, ChartedParams1 as
   -- Group each c.itemid in meaningful category names
   -- also perform some metric conversion (temperature, etc...)
   (select s.subject_id, 

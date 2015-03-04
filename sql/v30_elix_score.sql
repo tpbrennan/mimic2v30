@@ -67,7 +67,8 @@ WITH
   )
 
 select * from raw_elix order by 1,2;
-  
+
+create table v30_elixhuaser_scores as  
  with elix_weights AS
   (
     SELECT
@@ -132,31 +133,32 @@ select * from raw_elix order by 1,2;
       PSYCHOSES               *(-4) + DEPRESSION*(-5) AS two_yr_mort_pt,
       
       -- points for 1 year survival
-      CONGESTIVE_HEART_FAILURE*(4) + CARDIAC_ARRHYTHMIAS*(3) + VALVULAR_DISEASE
-                              *(0) + PULMONARY_CIRCULATION*(0) +
-      PERIPHERAL_VASCULAR     *(0) + HYPERTENSION*(-1) + PARALYSIS*(2) +
-      OTHER_NEUROLOGICAL      *(4) + CHRONIC_PULMONARY*(2) +
-      DIABETES_UNCOMPLICATED  *(0) + DIABETES_COMPLICATED*(0) + HYPOTHYROIDISM*
-      (0)                     + RENAL_FAILURE*(4) + LIVER_DISEASE*(4) +
-      PEPTIC_ULCER            *(0) + AIDS*(0) + LYMPHOMA*(5) +
-      METASTATIC_CANCER       *(12) + SOLID_TUMOR*(3) + RHEUMATOID_ARTHRITIS*(0
-      )                       + COAGULOPATHY*(2) + OBESITY*(-5) + WEIGHT_LOSS*(
-      4)                      + FLUID_ELECTROLYTE*(5) + BLOOD_LOSS_ANEMIA*(0) +
-      DEFICIENCY_ANEMIAS      *(-1) + ALCOHOL_ABUSE*(-3) + DRUG_ABUSE*(-4) +
-      PSYCHOSES               *(-3) + DEPRESSION*(-3) AS one_year_survival_pt,
+      CONGESTIVE_HEART_FAILURE*(14) + CARDIAC_ARRHYTHMIAS*(10) + VALVULAR_DISEASE
+                              *(-3) + PULMONARY_CIRCULATION*(0) +
+      PERIPHERAL_VASCULAR     *(3) + HYPERTENSION*(-1) + PARALYSIS*(9) +
+      OTHER_NEUROLOGICAL      *(11) + CHRONIC_PULMONARY*(7) +
+      DIABETES_UNCOMPLICATED  *(2) + DIABETES_COMPLICATED*(-2) + HYPOTHYROIDISM*
+      (3)                     + RENAL_FAILURE*(13) + LIVER_DISEASE*(12) +
+      PEPTIC_ULCER            *(0) + AIDS*(6) + LYMPHOMA*(13) +
+      METASTATIC_CANCER       *(31) + SOLID_TUMOR*(9) + RHEUMATOID_ARTHRITIS*(0
+      )                       + COAGULOPATHY*(7) + OBESITY*(-17) + WEIGHT_LOSS*(
+      9)                      + FLUID_ELECTROLYTE*(15) + BLOOD_LOSS_ANEMIA*(0) +
+      DEFICIENCY_ANEMIAS      *(-3) + ALCOHOL_ABUSE*(-5) + DRUG_ABUSE*(-11) +
+      PSYCHOSES               *(-8) + DEPRESSION*(-6) AS one_year_survival_pt,
+      
       -- points for 2 year survival
-      CONGESTIVE_HEART_FAILURE*(7) + CARDIAC_ARRHYTHMIAS*(5) + VALVULAR_DISEASE
-                              *(0) + PULMONARY_CIRCULATION*(0) +
-      PERIPHERAL_VASCULAR     *(1) + HYPERTENSION*(-1) + PARALYSIS*(4) +
-      OTHER_NEUROLOGICAL      *(6) + CHRONIC_PULMONARY*(4) +
-      DIABETES_UNCOMPLICATED  *(0) + DIABETES_COMPLICATED*(0) + HYPOTHYROIDISM*
-      (1)                     + RENAL_FAILURE*(7) + LIVER_DISEASE*(5) +
-      PEPTIC_ULCER            *(0) + AIDS*(4) + LYMPHOMA*(8) +
-      METASTATIC_CANCER       *(19) + SOLID_TUMOR*(4) + RHEUMATOID_ARTHRITIS*(0
-      )                       + COAGULOPATHY*(3) + OBESITY*(-8) + WEIGHT_LOSS*(
-      6)                      + FLUID_ELECTROLYTE*(6) + BLOOD_LOSS_ANEMIA*(0) +
-      DEFICIENCY_ANEMIAS      *(-1) + ALCOHOL_ABUSE*(-4) + DRUG_ABUSE*(-5) +
-      PSYCHOSES               *(-3) + DEPRESSION*(-4) AS two_year_survival_pt
+      CONGESTIVE_HEART_FAILURE*(14) + CARDIAC_ARRHYTHMIAS*(10) + VALVULAR_DISEASE
+                              *(-3) + PULMONARY_CIRCULATION*(0) +
+      PERIPHERAL_VASCULAR     *(3) + HYPERTENSION*(-1) + PARALYSIS*(9) +
+      OTHER_NEUROLOGICAL      *(10) + CHRONIC_PULMONARY*(8) +
+      DIABETES_UNCOMPLICATED  *(3) + DIABETES_COMPLICATED*(0) + HYPOTHYROIDISM*
+      (3)                     + RENAL_FAILURE*(14) + LIVER_DISEASE*(12) +
+      PEPTIC_ULCER            *(0) + AIDS*(8) + LYMPHOMA*(14) +
+      METASTATIC_CANCER       *(31) + SOLID_TUMOR*(10) + RHEUMATOID_ARTHRITIS*(0
+      )                       + COAGULOPATHY*(7) + OBESITY*(-18) + WEIGHT_LOSS*(9)
+      + FLUID_ELECTROLYTE*(13) + BLOOD_LOSS_ANEMIA*(0) +
+      DEFICIENCY_ANEMIAS      *(-1) + ALCOHOL_ABUSE*(-5) + DRUG_ABUSE*(-11) +
+      PSYCHOSES               *(-5) + DEPRESSION*(-6) AS two_year_survival_pt
     FROM
       v30_elix_raw_data
     ORDER BY
@@ -168,3 +170,6 @@ FROM
   elix_weights;
 
 GRANT SELECT ON MIMIC2DEVEL.ELIXHAUSER_POINTS TO MIMIC_PUBLIC_USERS;
+
+
+select /*csv*/ * from v30_elixhuaser_scores where rownum<100;
