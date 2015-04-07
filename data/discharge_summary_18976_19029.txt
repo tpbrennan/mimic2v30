@@ -1,0 +1,46 @@
+> select /*txt*/ text from mimic2v30.noteevents where hadm_id=19029 and lower(category) like '%discharge%'
+TEXT                                                                           
+--------------------------------------------------------------------------------
+                                                                                 
+                                                                                 
+                                                                                 
+Admission Date:  [**2766-11-29**]       Discharge Date:                          
+                                                                                 
+                                                                                 
+Service:                                                                         
+                                                                                 
+ADDENDUM:                                                                        
+
+                                                                                 
+                                                                                 
+                                                                                 
+Admission Date:  [**2766-11-29**]       Discharge Date:  [**2766-12-1**]         
+                                                                                 
+                                                                                 
+Se                                                                               
+
+                                                                                 
+                                                                                 
+                                                                                 
+Admission Date:  [**2766-11-29**]       Discharge Date:  [**2766-12-1**]         
+                                                                                 
+                                                                                 
+Se                                                                               
+
+                                                                                 
+                                                                                 
+                                                                                 
+Admission Date:  [**2766-11-29**]     Discharge Date:  [**2766-12-19**]          
+                                                                                 
+                                                                                 
+Ser                                                                              
+
+                                                                                 
+                                                                                 
+                                                                                 
+Admission Date:  [**2766-11-29**]     Discharge Date:  [**2766-12-19**]          
+                                                                                 
+                                                                                 
+Ser                                                                              
+
+

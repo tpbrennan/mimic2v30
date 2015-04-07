@@ -1,0 +1,16 @@
+PARAMETER,ACCEPTABLE_MAX,ACCEPTABLE_MIN,UNITS,
+HR,250,10,BPM,y
+SYS ABP,300,20,mmHg,y
+TEMPERATURE,45,15,C,y
+RESPIRATION_RATE,80,2,breaths per min,y
+URINE,20,0,liters,
+BUN,100,1,mg/dl,
+CREATININE,30,0,mg/dl,
+HCT,80,5,%,
+WBC,200000,100,per cubic mm,
+GLUCOSE,1000,0.5,mg/dl,
+POTASSIUM,20,0.5,mEq/liter,
+SODIUM,300,50,mEq/liter,
+HCO3,100,2,mEq/liter,
+Ventilation,,,,y
+GCS,,,,y
