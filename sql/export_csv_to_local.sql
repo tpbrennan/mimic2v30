@@ -26,7 +26,7 @@
 --spool off;
 
 
-spool "/home/mornin/mimic2v30b/admissions.csv"
+sqpool "/home/mornin/mimic2v30b/admissions.csv"
 
 select /*csv*/
 HADM_ID
@@ -41,3 +41,17 @@ HADM_ID
 from admissions;
 
 spool off;
+
+sqpool "/home/mornin/mimic2v30b/censusevents.csv"
+
+select /*csv*/
+CENSUS_ID
+,SUBJECT_ID
+,ICUSTAY_ID
+,INTIME
+,OUTTIME
+,CUID
+,LOS
+,DESTCAREUNIT
+,DISCHSTATUS
+from censusevents;

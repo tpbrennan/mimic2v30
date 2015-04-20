@@ -21,6 +21,14 @@ from mimic2v30.additives a;
 
 COMMENT ON COLUMN additives.subject_id IS 'Unique patient identifier';
 
+-- conversin of time zones
+select 
+charttime
+--
+, charttime AT TIME ZONE 'UTC' as temp1
+,cast(charttime AT TIME ZONE 'UTC' as timestamp) as temp
+from mimic2v30b.additives;
+
 
 
 /***************    admissions  ********************/
@@ -179,6 +187,11 @@ SUBJECT_ID
 from mimic2v30.labevents)
 
 select * from new_lab;
+
+update mimic2v30b.labevents
+set valueuom = 'mEq/L' where itemid=50975;
+
+commit;
 
 
 /***************    MEDEVENTS  ********************/
