@@ -14,8 +14,9 @@ Recreating mimic2v30 with new updates
 /***************    addiditves  ********************/
 
 -- conversin of time zones
-create table mimic2v30b_utc.additives as
-(select 
+--drop table mimic2v30b_utc.additives;
+--create table mimic2v30b_utc.additives as
+select 
 SUBJECT_ID
 ,ICUSTAY_ID
 ,ORDERID
@@ -23,8 +24,10 @@ SUBJECT_ID
 ,LABEL
 ,IOITEMID
 ,IOITEMLABEL
-,cast(charttime AT TIME ZONE 'UTC' as timestamp) as CHARTTIME 
-,cast(STARTTIME AT TIME ZONE 'UTC' as timestamp) as STARTTIME 
+--,cast(charttime AT TIME ZONE 'UTC' as timestamp) as CHARTTIME 
+, case when STARTTIME is null then cast(charttime AT TIME ZONE 'UTC' as timestamp)
+      else cast(STARTTIME AT TIME ZONE 'UTC' as timestamp) 
+  end as STARTTIME 
 ,cast(ENDTIME AT TIME ZONE 'UTC' as timestamp) as ENDTIME 
 ,ELEMID
 ,CGID
@@ -35,180 +38,110 @@ SUBJECT_ID
 ,IOITEMUOM
 ,SOURCE_FLG
 ,ADDITIVESDATAID
-from mimic2v30b.additives);
+from mimic2v30b.additives;
 
 
 
 /***************    admissions  ********************/
 
-create table admissions as
-select * from mornin.v30_admissions_beta;
+create table mimic2v30b_utc.admissions as
+select * from mimic2v30b.admissions;
 
+update mimic2v30b_utc.admissions a set ADMIT_TIME=(select cast(ADMIT_TIME AT TIME ZONE 'UTC' as timestamp) as ADMIT_TIME from mimic2v30b_utc.admissions b where a.ADMISSIONSDATAID=b.ADMISSIONSDATAID) where ADMIT_TIME is not null;
+
+rollback;
+commit;
 
 /***************    censusevents  ********************/
 
-create table censusevents as
-select * from mimic2v30.censusevents;
+create table mimic2v30b_utc.censusevents as
+select 
+CENSUS_ID
+,SUBJECT_ID
+,ICUSTAY_ID
+,cast(INTIME AT TIME ZONE 'UTC' as timestamp) as INTIME
+,cast(OUTTIME AT TIME ZONE 'UTC' as timestamp) as OUTTIME
+,CUID
+,LOS
+,DESTCAREUNIT
+,DISCHSTATUS
+,CENSUSEVENTSDATAID
+from mimic2v30b.censusevents;
 
 
 
 /***************    chartevents  ********************/
-create table chartevents as
-select * from mimic2v30.chartevents
-union all
-select * from mornin.v30_gcs_merge
-union all
-select * from mornin.v30_code_status;
+
 
 /***************    cptevents  ********************/
-create table cptevents as
-select * from mimic2v30.cptevents;
+
 
 /***************    D_CAREGIVERS  ********************/
-create table D_CAREGIVERS as
-select * from mimic2v30.D_CAREGIVERS;
+
 
 
 /***************    D_CAREUNITS  ********************/
-create table D_CAREUNITS as
-select * from mimic2v30.D_CAREUNITS;
+
 
 
 /***************    d_items  ********************/
 
-create table d_items as
-select * from mimic2v30.d_items;
 
-insert into d_items
-(
-ITEMID
-,LABEL
-,ABBREVIATION
-,ORIGIN
-,CODE
-,CATEGORY
-,UNITID
-,UNITNAME
-,TYPE
-,DESCRIPTION
-,LOWNORMALVALUE
-,HIGHNORMALVALUE
-,ALLERGYACTION
-,LOINC_CODE
-,LOINC_DESCRIPTION
-,OLD_LABITEMID
-,OLD_TEST_NAME
-,OLD_LOINC_CODE
-)
-values
-(
-229000
-, 'GCS - GCS Total'
-, null
-, 'MORNIN'
-, null
-, 'Neurological'
-, null
-, null
-, 'Numeric'
-, null
-, null
-, null
-, null
-, null
-, null
-, null
-, null
-, null
-);
-
-commit;
 
 /***************    D_PATIENTS  ********************/
-create table D_PATIENTS as
-select * from mimic2v30.D_PATIENTS;
+
 
 /***************    D_UNITS  ********************/
-create table D_UNITS as
-select * from mimic2v30.D_UNITS;
+
 
 /***************    DEMOGRAPHIC_DETAIL  ********************/
-create table DEMOGRAPHIC_DETAIL as
-select * from mimic2v30.DEMOGRAPHIC_DETAIL;
+
 
 /***************    DRGEVENTS  ********************/
-create table DRGEVENTS as
-select * from mimic2v30.DRGEVENTS;
+
 
 /***************    ICD9  ********************/
-create table ICD9 as
-select * from mimic2v30.ICD9;
+
 
 /***************    ICUSTAY_DAYS  ********************/
-create table ICUSTAY_DAYS as
-select * from mimic2v30.ICUSTAY_DAYS;
+
 
 /***************    ICUSTAYEVENTS  ********************/
-create table ICUSTAYEVENTS as
-select * from mimic2v30.ICUSTAYEVENTS;
+
 
 /***************    IOEVENTS  ********************/
-create table IOEVENTS as
-select * from mimic2v30.IOEVENTS;
-
-
---MEDEVENTS
---MICROBIOLOGYEVENTS
---NOTEEVENTS
---ORDERENTRY
---POE_MED_ORDER
---PROCEDUREEVENTS
---TOTALBALEVENTS
 
 
 /***************    labevents  ********************/
-create table labevents as
-with new_lab as
-(select 
---rownum as row_id
-SUBJECT_ID
-,HADM_ID
-,ITEMID
-,CHARTTIME
-,TEST_NAME
-,value
-,case when regexp_like(value, '[[:digit:]]') and
-(
-  regexp_like(value, '^[-+]{0,1}([[:digit:]]){0,3}(\,([[:digit:]]){0,3})*(\.[[:digit:]]+){0,1}$')
-  or 
-  regexp_like(value, '^[-+]{0,1}[[:digit:]]*(\.[[:digit:]]+){0,1}$')
-)
-  then to_number(value) 
-  --then 1
-  else null end as valuenum
-,VALUEUOM
-,FLAG
-,FLUID
-,CATEGORY
-,LOINC_CODE
-
-from mimic2v30.labevents)
-
-select * from new_lab;
-
-update mimic2v30b.labevents
-set valueuom = 'mEq/L' where itemid=50975;
-
-commit;
 
 
 /***************    MEDEVENTS  ********************/
-create table MEDEVENTS as
-select * from mimic2v30.MEDEVENTS;
+select
+SUBJECT_ID
+,ICUSTAY_ID
+,ORDERID
+,ITEMID
+,LABEL
+,SOLITEMID
+,SOLITEMLABEL
+,CHARTTIME
+,ELEMID
+,REALTIME
+,STARTTIME
+,ENDTIME
+,VALUE
+,UOM
+,SOLITEMVALUE
+,SOLITEMUOM
+,CGID
+,CUID
+,STOPPED
+,MEDEVENTSDATAID
+from mimic2v30b.MEDEVENTS med
+join mimic2v26.A_MEDDURATIONS dur on med.;
 
 /***************    MICROBIOLOGYEVENTS  ********************/
-create table MICROBIOLOGYEVENTS as
-select * from mimic2v30.MICROBIOLOGYEVENTS;
+
 
 /***************    NOTEEVENTS  ********************/
 create table mimic2v30b_utc.NOTEEVENTS as
@@ -229,49 +162,132 @@ REC_ID
 ,EXAM_NAME
 ,PATIENT_INFO
 ,NOTEEVENTSDATAID
-from mimic2v30.NOTEEVENTS;
+from mimic2v30b.NOTEEVENTS;
 
 /***************    ORDERENTRY  ********************/
-create table ORDERENTRY as
-select * from mimic2v30.ORDERENTRY;
+
 
 /***************    POE_MED_ORDER  ********************/
-create table POE_MED_ORDER as
-select * from mimic2v30.POE_MED_ORDER;
+-- remove drug_name_poe column
+-- converted timezone and renamed start_dt and stop_dt to starttime and endtime
+create table mimic2v30b_utc.POE_MED_ORDER as
+select 
+SUBJECT_ID
+,HADM_ID
+,ICUSTAY_ID
+,cast(START_DT AT TIME ZONE 'UTC' as timestamp) STARTTIME
+,cast(STOP_DT AT TIME ZONE 'UTC' as timestamp) ENDTIME
+,DRUG_TYPE
+,DRUG
+,DRUG_NAME_GENERIC
+,FORMULARY_DRUG_CD
+,GSN
+,NDC
+,PROD_STRENGTH
+,DOSE_VAL_RX
+,DOSE_UNIT_RX
+,FORM_VAL_DISP
+,FORM_UNIT_DISP
+,ROUTE
+,POE_MED_ORDERDATAID
+from mimic2v30b.POE_MED_ORDER;
 
 /***************    PROCEDUREEVENTS  ********************/
-create table PROCEDUREEVENTS as
-select * from mimic2v30.PROCEDUREEVENTS;
+-- remove SEQUENCE_NUM column
+-- converted timezone 
+create table mimic2v30b_utc.PROCEDUREEVENTS as
+select 
+SUBJECT_ID
+,HADM_ID
+,ORDERID
+,ORDERCATEGORYNAME
+,ITEMID
+,LABEL
+, case when proc_dt is null then cast(starttime as date) else proc_dt end as proc_dt
+--,SEQUENCE_NUM
+,cast(STARTTIME AT TIME ZONE 'UTC' as timestamp) as STARTTIME 
+,cast(ENDTIME AT TIME ZONE 'UTC' as timestamp) as ENDTIME 
+,CGID
+,PROCEDUREEVENTSDATAID
+from mimic2v30b.PROCEDUREEVENTS;
 
 /***************    TOTALBALEVENTS  ********************/
-create table TOTALBALEVENTS as
-select * from mimic2v30.TOTALBALEVENTS;
+--- Not executed yet
+
+with temp as
+(select distinct
+a.subject_id
+, a.icustay_id
+--, a.charttime
+--, b.charttime
+, b.TOTALBALEVENTSDATAID
+from MIMIC2V30B.totalbalevents a
+join MIMIC2V30B.totalbalevents b 
+  on a.subject_id=b.subject_id 
+  and a.cumitemid=b.cumitemid 
+  and a.icustay_id is not null
+  and b.icustay_id is null
+  and b.charttime <= a.charttime+1
+)
+
+, totalbalevents_new as
+(select
+a.SUBJECT_ID
+,case  when a.ICUSTAY_ID is null then b.ICUSTAY_ID else a.ICUSTAY_ID end as ICUSTAY_ID
+,a.CHARTTIME
+,a.ELEMID
+,a.REALTIME
+,a.CGID
+,a.CUID
+,a.ITEMID
+,a.LABEL
+,a.VOLUME
+,a.CUMITEMID
+,a.CUMLABEL
+,a.CUMVOLUME
+,a.UOM
+,a.ACCUMPERIOD
+,a.APPROX
+,a.RESET
+,a.STOPPED
+,a.TOTALBALEVENTSDATAID
+from MIMIC2V30B.totalbalevents a
+left join temp b on a.TOTALBALEVENTSDATAID=b.TOTALBALEVENTSDATAID
+)
+
+--select count(*) from totalbalevents_new where icustay_id is null;
+select * from totalbalevents_new;
 
 
 
---select * from new_lab where itemid in (225677);
---group by valueuom;
-/***************    ventilation  ********************/
+create table mimic2v30b_utc.TOTALBALEVENTS as
 select 
-cast(subject_id as number(8,0)) as subject_id
-, cast(icustay_id as number(8,0)) as icustay_id
-, cast(seq as number(1,0)) as seq
-, to_date(begin_time, 'DD-MON-YY hh:mi:ss am', 'nls_date_language = ENGLISH')
---, to_timestamp_tz(begin_time, 'DD-MON-YYYY hh:mi:ss am tzr', 'nls_date_language = ENGLISH') as start_time
-from MORNIN.v26_ventilation;
+SUBJECT_ID
+,ICUSTAY_ID
+,CHARTTIME
+--,ELEMID
+,REALTIME
+,CGID
+,CUID
+,ITEMID
+,case when LABEL is null then CUMLABEL else LABEL end as LABEL
+,VOLUME
+,CUMITEMID
+--,CUMLABEL
+,CUMVOLUME
+,UOM
+,ACCUMPERIOD
+,APPROX
+,RESET
+,STOPPED
+,TOTALBALEVENTSDATAID
+from mimic2v30b.TOTALBALEVENTS;
+
+/***************    ventilation  ********************/
+
 
 /***************    lcp_COMORBIDITY_SCORES  ********************/
-create table lcp_COMORBIDITY_SCORES as
-select * from mimic2v30.COMORBIDITY_SCORES;
 
-create table lcp_ELIXHAUSER_SCORES as
-select * from mornin.V30_ELIXHAUSER_SCORES;
 
 
 /***************    lcp_daily_sofa  ********************/
-create table cal_daily_sofa as
-select * from MOHAMMAD.daily_sofa_score;
-
-alter table cal_daily_sofa rename to lcp_daily_sofa;
-
-commit;

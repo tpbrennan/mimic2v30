@@ -20,14 +20,96 @@ SET COLSEP ','
 /***************    CHARTEVENTS  ********************/
 
 spool "/backup/dpdump/mimic2v30b_csv/chartevents_mornin.csv"
-select 'SUBJECT_ID'||','||'HADM_ID'||','||'ICUSTAY_ID'||','||'ITEMID'||','||'LABEL'||','||'TIME'||','||'ELEMID'||','||'VALIDATIONTIME'||','||'CGID'
-||','||'CUID'||','||'VALUE1'||','||'VALUE1NUM'||','||'VALUE1UOM'||','||'COMMENTS'||','||'VALUE2'||','||'VALUE2NUM'||','||'VALUE2UOM'||','||'RESULTSTATUS' 
-||','||'STOPPED'||','||'WARNING'||','||'ERROR'||','||'CHARTEVENTSDATAID' from dual;
+select 
+'SUBJECT_ID'
+||'$!*'||
+'HADM_ID'
+||'$!*'||
+'ICUSTAY_ID'
+||'$!*'||
+'ITEMID'
+||'$!*'||
+'LABEL'
+||'$!*'||
+'TIME'
+||'$!*'||
+'ELEMID'
+||'$!*'||
+'KEYINTIME'
+||'$!*'||
+'CGID'
+||'$!*'||
+'CUID'
+||'$!*'||
+'VALUE1'
+||'$!*'||
+'VALUE1NUM'
+||'$!*'||
+'VALUE1UOM'
+||'$!*'||
+'VALUE2'
+||'$!*'||
+'VALUE2NUM'
+||'$!*'||
+'VALUE2UOM'
+||'$!*'||
+'RESULTSTATUS'
+||'$!*'||
+'STOPPED'
+||'$!*'||
+'WARNING'
+||'$!*'||
+'ERROR'
+||'$!*'||
+'CHARTEVENTSDATAID'
+||'####'
+from dual;
 
 select x from (
-select SUBJECT_ID||','||HADM_ID||','||ICUSTAY_ID||','||ITEMID||',"'||LABEL||'",'||TIME||','||ELEMID||','||VALIDATIONTIME||','||CGID
-||','||CUID||',"'||VALUE1||'",'||VALUE1NUM||',"'||VALUE1UOM||'","'||COMMENTS||'","'||VALUE2||'",'||VALUE2NUM||',"'||VALUE2UOM||'","'||RESULTSTATUS 
-||'","' || STOPPED || '",' || WARNING || ',' || ERROR || ',' || CHARTEVENTSDATAID  as x
+select 
+SUBJECT_ID
+||'$!*'||
+HADM_ID
+||'$!*'||
+ICUSTAY_ID
+||'$!*'||
+ITEMID
+||'$!*'||
+LABEL
+||'$!*'||
+TIME
+||'$!*'||
+ELEMID
+||'$!*'||
+KEYINTIME
+||'$!*'||
+CGID
+||'$!*'||
+CUID
+||'$!*'||
+VALUE1
+||'$!*'||
+VALUE1NUM
+||'$!*'||
+VALUE1UOM
+||'$!*'||
+VALUE2
+||'$!*'||
+VALUE2NUM
+||'$!*'||
+VALUE2UOM
+||'$!*'||
+RESULTSTATUS
+||'$!*'||
+STOPPED
+||'$!*'||
+WARNING
+||'$!*'||
+ERROR
+||'$!*'||
+CHARTEVENTSDATAID
+||'####'
+as x
 from 
   ( select
   SUBJECT_ID
@@ -35,9 +117,9 @@ from
   ,ICUSTAY_ID
   ,ITEMID
   ,LABEL
-  ,to_char(TIME, 'dd-mon-yyyy hh24:mi:ss tzr') as TIME  
+  ,to_char(TIME, 'yyyy-mm-dd hh24:mi:ss') as TIME 
   ,ELEMID
-  ,to_char(VALIDATIONTIME, 'dd-mon-yyyy hh24:mi:ss tzr') as VALIDATIONTIME 
+  ,to_char(KEYINTIME, 'yyyy-mm-dd hh24:mi:ss') as KEYINTIME
   ,CGID
   ,CUID
   ,VALUE1
@@ -52,7 +134,7 @@ from
   ,WARNING
   ,ERROR
   ,CHARTEVENTSDATAID
-  from mimic2v30b.CHARTEVENTS));
+  from mimic2v30b_utc.CHARTEVENTS));
 
 spool off;
 

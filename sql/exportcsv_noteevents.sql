@@ -20,85 +20,100 @@ set LINESIZE 32767
 -- LABEVENTS ---------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-spool "/backup/dpdump/mimic2v30b_csv/labevents_mornin.csv"
+spool "/home/mornin/noteevents_mornin.dsv"
 
 -- ||','|| goes between each one and you need single quotes.
 
 select 
+'REC_ID'
+||'$!*'||
 'SUBJECT_ID'
 ||'$!*'||
 'HADM_ID'
 ||'$!*'||
-'ITEMID'
+'ICUSTAY_ID'
+||'$!*'||
+'ELEMID'
 ||'$!*'||
 'TIME'
 ||'$!*'||
-'TEST_NAME'
+'KEYINTIME'
 ||'$!*'||
-'VALUE'
+'CGID'
 ||'$!*'||
-'VALUENUM'
+'CORRECTION'
 ||'$!*'||
-'VALUEUOM'
-||'$!*'||
-'FLAG'
-||'$!*'||
-'FLUID'
+'CUID'
 ||'$!*'||
 'CATEGORY'
 ||'$!*'||
-'LOINC_CODE'
+'TITLE'
 ||'$!*'||
-'LABEVENTSDATAID'
+'TEXT'
+||'$!*'||
+'EXAM_NAME'
+||'$!*'||
+'PATIENT_INFO'
+||'$!*'||
+'NOTEEVENTSDATAID'
 ||'####'
 from dual;
 
 -- ||'","'|| goes in between each one
 select x from (
 select 
+REC_ID
+||'$!*'||
 SUBJECT_ID
 ||'$!*'||
 HADM_ID
 ||'$!*'||
-ITEMID
+ICUSTAY_ID
+||'$!*'||
+ELEMID
 ||'$!*'||
 TIME
 ||'$!*'||
-TEST_NAME
+KEYINTIME
 ||'$!*'||
-VALUE
+CGID
 ||'$!*'||
-VALUENUM
+CORRECTION
 ||'$!*'||
-VALUEUOM
-||'$!*'||
-FLAG
-||'$!*'||
-FLUID
+CUID
 ||'$!*'||
 CATEGORY
 ||'$!*'||
-LOINC_CODE
+TITLE
 ||'$!*'||
-LABEVENTSDATAID 
+TEXT
+||'$!*'||
+EXAM_NAME
+||'$!*'||
+PATIENT_INFO
+||'$!*'||
+NOTEEVENTSDATAID
 ||'####'
 as x
 from 
   ( select
-SUBJECT_ID
+REC_ID
+,SUBJECT_ID
 ,HADM_ID
-,ITEMID
+,ICUSTAY_ID
+,ELEMID
 ,to_char(TIME, 'yyyy-mm-dd hh24:mi:ss') as TIME
-,TEST_NAME
-,VALUE
-,VALUENUM
-,VALUEUOM
-,FLAG
-,FLUID
+,to_char(KEYINTIME, 'yyyy-mm-dd hh24:mi:ss') as KEYINTIME
+,CGID
+,CORRECTION
+,CUID
 ,CATEGORY
-,LOINC_CODE
-,LABEVENTSDATAID
-from mimic2v30b_utc.LABEVENTS));
+,TITLE
+,TEXT
+,EXAM_NAME
+,PATIENT_INFO
+,NOTEEVENTSDATAID
+from mimic2v30b_utc.NOTEEVENTS));
 
 spool off;
 

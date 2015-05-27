@@ -26,94 +26,91 @@ spool "/backup/dpdump/mimic2v30b_csv/ioevents_mornin.csv"
 
 select 
 'SUBJECT_ID'
-||','||
+||'$!*'||
 'ICUSTAY_ID'
-||','||
+||'$!*'||
 'ORDERID'
-||','||
+||'$!*'||
 'ITEMID'
-||','||
+||'$!*'||
 'LABEL'
-||','||
-'CHARTTIME'
-||','||
+||'$!*'||
 'ELEMID'
-||','||
+||'$!*'||
 'ALTID'
-||','||
-'REALTIME'
-||','||
+||'$!*'||
 'STARTTIME'
-||','||
+||'$!*'||
 'ENDTIME'
-||','||
+||'$!*'||
+'KEYINSTARTTIME'
+||'$!*'||
 'CGID'
-||','||
+||'$!*'||
 'CUID'
-||','||
+||'$!*'||
 'VALUE'
-||','||
+||'$!*'||
 'UOM'
-||','||
+||'$!*'||
 'UNITSHUNG'
-||','||
+||'$!*'||
 'UNITSHUNGUOM'
-||','||
+||'$!*'||
 'NEWBOTTLE'
-||','||
+||'$!*'||
 'STOPPED'
-||','||
+||'$!*'||
 'ESTIMATE'
-||','||
+||'$!*'||
 'IOEVENTSDATAID'
+||'####'
 from dual;
 
 -- ||'","'|| goes in between each one
 select x from (
 select 
-'"'||
 SUBJECT_ID
-||'","'||
+||'$!*'||
 ICUSTAY_ID
-||'","'||
+||'$!*'||
 ORDERID
-||'","'||
+||'$!*'||
 ITEMID
-||'","'||
+||'$!*'||
 LABEL
-||'","'||
-CHARTTIME
-||'","'||
+||'$!*'||
 ELEMID
-||'","'||
+||'$!*'||
 ALTID
-||'","'||
-REALTIME
-||'","'||
+||'$!*'||
 STARTTIME
-||'","'||
+||'$!*'||
 ENDTIME
-||'","'||
+||'$!*'||
+KEYINSTARTTIME
+||'$!*'||
 CGID
-||'","'||
+||'$!*'||
 CUID
-||'","'||
+||'$!*'||
 VALUE
-||'","'||
+||'$!*'||
 UOM
-||'","'||
+||'$!*'||
 UNITSHUNG
-||'","'||
+||'$!*'||
 UNITSHUNGUOM
-||'","'||
+||'$!*'||
 NEWBOTTLE
-||'","'||
+||'$!*'||
 STOPPED
-||'","'||
+||'$!*'||
 ESTIMATE
-||'","'||
+||'$!*'||
 IOEVENTSDATAID
-||'"' as x
+||'####'
+as x
 from 
   ( select
 SUBJECT_ID
@@ -121,12 +118,11 @@ SUBJECT_ID
 ,ORDERID
 ,ITEMID
 ,LABEL
-,to_char(CHARTTIME, 'dd-mon-yyyy hh24:mi:ss tzr') as CHARTTIME 
 ,ELEMID
 ,ALTID
-,to_char(REALTIME, 'dd-mon-yyyy hh24:mi:ss tzr') as REALTIME 
-,to_char(STARTTIME, 'dd-mon-yyyy hh24:mi:ss tzr') as STARTTIME 
-,to_char(ENDTIME, 'dd-mon-yyyy hh24:mi:ss tzr') as ENDTIME 
+,to_char(STARTTIME, 'yyyy-mm-dd hh24:mi:ss') as STARTTIME
+,to_char(ENDTIME, 'yyyy-mm-dd hh24:mi:ss') as ENDTIME
+,to_char(KEYINSTARTTIME, 'yyyy-mm-dd hh24:mi:ss') as KEYINSTARTTIME
 ,CGID
 ,CUID
 ,VALUE
@@ -137,7 +133,7 @@ SUBJECT_ID
 ,STOPPED
 ,ESTIMATE
 ,IOEVENTSDATAID
-from mimic2v30b.IOEVENTS));
+from mimic2v30b_utc.IOEVENTS));
 
 spool off;
 
