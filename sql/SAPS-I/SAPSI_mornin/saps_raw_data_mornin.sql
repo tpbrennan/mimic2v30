@@ -1,5 +1,5 @@
 /*
-  saps_create_24hr_minmax.sql
+  saps_raw_data_mornin.sql
 
   Created on   : Oct 2014 by Mornin Feng
   Last updated :
@@ -14,8 +14,6 @@
  parameters for each 24hr of each ICUStay for adult patients.
 
 */
---create table mornin.v30_sapsi_raw_data as
---select * from v30_sapsi_raw_data;
 
 --drop table mornin.v30_sapsi_raw_data;
 --create table mornin.v30_sapsi_raw_data as
